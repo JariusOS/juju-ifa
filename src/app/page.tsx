@@ -27,8 +27,8 @@ export default function Dashboard() {
       fetch('/api/neo4j?action=nodes&label=GeoNode&limit=10').then(r => r.json()),
     ]).then(([s, coms, geos]) => {
       setStats(s);
-      setTopCommodities(coms.map((n: Record<string, unknown>) => ({ n: n.n as NodeItem['n'], labels: ['ComNode'] })));
-      setTopCountries(geos.map((n: Record<string, unknown>) => ({ n: n.n as NodeItem['n'], labels: ['GeoNode'] })));
+      setTopCommodities(coms.map((n: Record<string, unknown>) => ({ n: n as unknown as NodeItem['n'], labels: ['ComNode'] })));
+      setTopCountries(geos.map((n: Record<string, unknown>) => ({ n: n as unknown as NodeItem['n'], labels: ['GeoNode'] })));
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);

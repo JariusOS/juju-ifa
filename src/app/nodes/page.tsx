@@ -27,8 +27,8 @@ export default function NodesPage() {
       fetch('/api/neo4j?action=nodes&label=ComNode&limit=100').then(r => r.json()),
       fetch('/api/neo4j?action=nodes&label=GeoNode&limit=100').then(r => r.json()),
     ]).then(([coms, geos]) => {
-      setComNodes(coms.map((r: Record<string, unknown>) => r.n as NodeItem));
-      setGeoNodes(geos.map((r: Record<string, unknown>) => r.n as NodeItem));
+      setComNodes(coms as unknown as NodeItem[]);
+      setGeoNodes(geos as unknown as NodeItem[]);
       setLoading(false);
     });
   }, []);
