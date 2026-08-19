@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JUJU IFA — Intelligence Fusion Architecture
 
-## Getting Started
+Africa's commodity export intelligence platform. Structured data for 100 commodities across 13 master modules, with search, profiles, and intelligence briefings.
 
-First, run the development server:
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000 (hot reload)
+npm run build      # production build
+npx next start -p 3210  # production server
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What's Inside
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Commodity Index (`/`)
+Ranked feed of 100 African commodities. Search by name, COM ID, HS code, or tags. Filter by type (ENE/PMN/MET/CRM/MIN/AGR/MAR/FOR/CHM). Sort by rank, export value, YoY growth, or confidence.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Commodity Profile (`/nodes/{id}`)
+Social-media-style intelligence page per commodity:
+- **Hero**: rank badge, COM ID, type, HS code, node tags
+- **Live Overview**: producer donuts, exporter/importer bars
+- **17+ Sections**: Snapshot, Production, Trade, DNA, Strategic Intelligence, Risk, Opportunities, Market Drivers, Historical, Network, and more
+- **Intelligence Briefing**: Top-10 format with Classification/Core Brief/Impact/Opportunity (Crude Oil complete; others pending)
 
-## Learn More
+### COM ID Format
+`COM-{TYPE}-{NAME3}-{RANK}` — e.g., `COM-ENE-OIL-001` (Crude Oil, rank 1), `COM-CRM-COP-002` (Copper, rank 2).
 
-To learn more about Next.js, take a look at the following resources:
+## Data Architecture
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/data/
+├── commodities.ts      ← Registry (master modules + index overlay)
+├── comids.ts           ← ID scheme + derivation
+├── sections.ts         ← buildSections() assembler
+├── module-extras.ts    ← Advanced intelligence sections
+├── master-100.ts       ← 100-record index (reference-grade)
+├── countries.ts        ← 103 country names + flags
+├── crude-oil.ts        ← 13 master module files
+├── copper.ts              (immutable authority — full structured data)
+├── gold.ts
+├── cocoa.ts
+├── pgms.ts
+├── diamonds.ts
+├── iron-ore.ts
+├── cobalt.ts
+├── coal.ts
+├── bauxite.ts
+├── phosphate.ts
+├── natural-gas-lng.ts
+└── refined-products.ts
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Authority model**: Master modules are immutable. The 100-record index is reference-grade (~50% confidence). Master data always wins.
 
-## Deploy on Vercel
+## Tech Stack
+- Next.js 16 (App Router)
+- TypeScript
+- React 19
+- Tailwind CSS
+- Neo4j (optional, for non-commodity nodes)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Docs
+- `SESSION-2026-08-19.md` — Session summary (what was built)
+- `ROADMAP.md` — Architecture overview, completed work, and next phases
+- `jujuCOM-final.md` — Source data: 100-commodity master file
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+Private — JUJU Platform

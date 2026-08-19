@@ -2,6 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { getCommodityById } from '@/data/commodities';
+import CommodityProfile from './_components/CommodityProfile';
+
+export default function NodeProfile() {
+  const params = useParams();
+  const id = (params.id as string) || '';
+  const commodity = getCommodityById(id);
+
+  if (commodity) {
+    return (
+      <div style={{ maxWidth: 600, margin: '0 auto', padding: '0 16px', background: '#080808', minHeight: '100vh' }}>
+        <CommodityProfile c={commodity} />
+      </div>
+    );
+  }
+
+  return <GenericNodeProfile id={id} />;
+}
+
+/* ── Existing Neo4j-driven generic profile (GeoNodes, unseeded COM ids) ── */
 
 interface NodeData {
   id: string;
@@ -30,9 +50,7 @@ interface Connection {
   target: NodeData;
 }
 
-export default function NodeProfile() {
-  const params = useParams();
-  const id = params.id as string;
+function GenericNodeProfile({ id }: { id: string }) {
   const [node, setNode] = useState<NodeData | null>(null);
   const [connections, setConnections] = useState<Connection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,8 +59,8 @@ export default function NodeProfile() {
   useEffect(() => {
     if (!id) return;
     fetch(`/api/neo4j?action=node&id=${encodeURIComponent(id)}`)
-      .then(r => r.json())
-      .then(data => {
+      .then((r) => r.json())
+      .then((data) => {
         if (data.n) {
           setNode(data.n);
           setConnections(data.connections || []);
@@ -74,14 +92,13 @@ export default function NodeProfile() {
   const confidenceColor = (node.confidence || 0) >= 70 ? '#10B981' : (node.confidence || 0) >= 40 ? '#F59E0B' : '#EF4444';
 
   const groupedConnections: Record<string, Connection[]> = {};
-  connections.forEach(c => {
+  connections.forEach((c) => {
     if (!groupedConnections[c.rel]) groupedConnections[c.rel] = [];
     groupedConnections[c.rel].push(c);
   });
 
   return (
     <div style={{ maxWidth: 600, margin: '0 auto', padding: '0 16px 80px' }}>
-      {/* Hero */}
       <div className="card" style={{
         background: 'linear-gradient(135deg, #101F30 0%, #132437 100%)',
         marginTop: 16, padding: 24, borderRadius: 16,
@@ -109,7 +126,7 @@ export default function NodeProfile() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
-          {node.tags?.map(tag => (
+          {node.tags?.map((tag) => (
             <span key={tag} style={{
               fontSize: 10, padding: '3px 8px', borderRadius: 6,
               background: 'rgba(255,255,255,0.06)', color: '#AAB7C6',
@@ -153,9 +170,8 @@ export default function NodeProfile() {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="tab-nav">
-        {['home', 'connections', 'info'].map(tab => (
+        {['home', 'connections', 'info'].map((tab) => (
           <button key={tab} className={`tab-item ${activeTab === tab ? 'active' : ''}`}
             onClick={() => setActiveTab(tab)}>
             {tab.toUpperCase()}
@@ -163,40 +179,36 @@ export default function NodeProfile() {
         ))}
       </div>
 
-      {/* Tab content */}
       {activeTab === 'home' && (
-        <>
-          {/* Node Fingerprint */}
-          <div className="card" style={{ marginTop: 12 }}>
-            <div className="section-header">Node Fingerprint</div>
-            <p style={{ fontSize: 13, color: '#D5DCE5', lineHeight: 1.6, marginBottom: 12 }}>
-              {node.fingerprint || node.description || 'No fingerprint available.'}
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-              <div>
-                <div className="section-header">Status</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <div className="pulse-dot" style={{ width: 6, height: 6 }} />
-                  <span style={{ fontSize: 12, color: '#D5DCE5' }}>
-                    {(node.confidence || 0) >= 70 ? 'High' : (node.confidence || 0) >= 40 ? 'Medium' : 'Low'}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <div className="section-header">Confidence</div>
-                <span style={{ fontSize: 12, color: confidenceColor, fontFamily: 'monospace' }}>
-                  {node.confidence || 0}%
-                </span>
-              </div>
-              <div>
-                <div className="section-header">Weight</div>
-                <span style={{ fontSize: 12, color: '#D5DCE5', fontFamily: 'monospace' }}>
-                  {node.weight || 0}/10
+        <div className="card" style={{ marginTop: 12 }}>
+          <div className="section-header">Node Fingerprint</div>
+          <p style={{ fontSize: 13, color: '#D5DCE5', lineHeight: 1.6, marginBottom: 12 }}>
+            {node.fingerprint || node.description || 'No fingerprint available.'}
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+            <div>
+              <div className="section-header">Status</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <div className="pulse-dot" style={{ width: 6, height: 6 }} />
+                <span style={{ fontSize: 12, color: '#D5DCE5' }}>
+                  {(node.confidence || 0) >= 70 ? 'High' : (node.confidence || 0) >= 40 ? 'Medium' : 'Low'}
                 </span>
               </div>
             </div>
+            <div>
+              <div className="section-header">Confidence</div>
+              <span style={{ fontSize: 12, color: confidenceColor, fontFamily: 'monospace' }}>
+                {node.confidence || 0}%
+              </span>
+            </div>
+            <div>
+              <div className="section-header">Weight</div>
+              <span style={{ fontSize: 12, color: '#D5DCE5', fontFamily: 'monospace' }}>
+                {node.weight || 0}/10
+              </span>
+            </div>
           </div>
-        </>
+        </div>
       )}
 
       {activeTab === 'connections' && (
@@ -248,7 +260,7 @@ export default function NodeProfile() {
               { label: 'Confidence', value: `${node.confidence}%` },
               isCom && node.comtradeCode ? { label: 'HS Code', value: node.comtradeCode } : null,
               isCom && node.africaShare ? { label: 'Africa Share', value: node.africaShare } : null,
-            ].filter(Boolean).map(item => item && (
+            ].filter(Boolean).map((item) => item && (
               <div key={item.label} style={{ padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                 <div className="section-header">{item.label}</div>
                 <div style={{ fontSize: 13, color: '#D5DCE5', fontFamily: 'monospace' }}>{item.value}</div>
