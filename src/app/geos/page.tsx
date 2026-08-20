@@ -16,11 +16,11 @@ const REGION_MAP: Record<string, string> = {
   'Southern': 'Southern Africa',
 };
 
-type SortKey = 'rank' | 'value' | 'share' | 'gdp' | 'gdpPerCapita' | 'pop' | 'name';
+type SortKey = 'rank' | 'value' | 'share' | 'gdp' | 'gdpPerCapita' | 'pop' | 'name' | 'lifeExp' | 'minWage';
 type ViewMode = 'table' | 'cards' | 'grid' | 'list';
 
 const SORT_LABELS: Record<SortKey, string> = {
-  rank: 'Rank', value: 'Export $', share: 'Share %', gdp: 'GDP', gdpPerCapita: 'GDP/Cap', pop: 'Pop', name: 'Name',
+  rank: 'Rank', value: 'Export $', share: 'Share %', gdp: 'GDP', gdpPerCapita: 'GDP/Cap', pop: 'Pop', name: 'Name', lifeExp: 'Life Exp', minWage: 'Min Wage',
 };
 
 function tierColor(tier: GeoTier): string {
@@ -60,7 +60,7 @@ export default function GeosIndex() {
   const [q, setQ] = useState('');
   const [tier, setTier] = useState<GeoTier | 'All'>('All');
   const [region, setRegion] = useState<string>('All');
-  const [sort, setSort] = useState<SortKey>('rank');
+  const [sort, setSort] = useState<SortKey>('value');
   const [asc, setAsc] = useState(false);
   const [view, setView] = useState<ViewMode>('table');
 
@@ -85,6 +85,8 @@ export default function GeosIndex() {
           case 'gdp': cmp = parseNum(a.gdp) - parseNum(b.gdp); break;
           case 'gdpPerCapita': cmp = parseNum(a.gdpPerCapita) - parseNum(b.gdpPerCapita); break;
           case 'pop': cmp = parseNum(a.population) - parseNum(b.population); break;
+          case 'lifeExp': cmp = parseNum(findMetric(a, 'Life Exp')) - parseNum(findMetric(b, 'Life Exp')); break;
+          case 'minWage': cmp = parseNum(findMetric(a, 'Min Wage')) - parseNum(findMetric(b, 'Min Wage')); break;
           case 'name': cmp = a.name.localeCompare(b.name); break;
           default: cmp = a.rank - b.rank;
         }
@@ -181,7 +183,7 @@ export default function GeosIndex() {
 
         {/* Sort pills */}
         <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
-          {(['rank', 'value', 'share', 'gdp', 'gdpPerCapita', 'pop', 'name'] as SortKey[]).map((s) => (
+          {(['value', 'share', 'gdp', 'gdpPerCapita', 'pop', 'lifeExp', 'minWage', 'name'] as SortKey[]).map((s) => (
             <button key={s} onClick={() => { if (sort === s) setAsc(!asc); else { setSort(s); setAsc(false); } }} style={{
               padding: '4px 8px', borderRadius: 5, fontSize: 9.5, fontWeight: 600,
               color: sort === s ? '#fff' : 'var(--text-4)',

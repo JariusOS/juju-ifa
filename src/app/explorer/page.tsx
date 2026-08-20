@@ -8,11 +8,11 @@ import { nodeClassColor, nodeClassSoft } from '@/app/nodes/[id]/_components/them
 
 const TYPES = ['ALL', 'ENE', 'PMN', 'MET', 'CRM', 'FOR', 'MIN', 'AGR', 'MAR', 'CHM'];
 
-type SortKey = 'rank' | 'value' | 'yoy' | 'conf' | 'name' | 'weight' | 'global';
+type SortKey = 'rank' | 'value' | 'yoy' | 'conf' | 'name' | 'weight' | 'global' | 'price' | 'africaShare' | 'reserve';
 type ViewMode = 'table' | 'cards' | 'grid' | 'list';
 
 const SORT_LABELS: Record<SortKey, string> = {
-  rank: 'Rank', value: 'Export $', yoy: 'YoY', conf: 'Conf', name: 'Name', weight: 'Weight', global: 'Global $',
+  rank: 'Rank', value: 'Export $', price: 'Price', africaShare: 'Africa %', reserve: 'Reserves', yoy: 'YoY', conf: 'Conf', name: 'Name', weight: 'Weight', global: 'Global $',
 };
 
 function typeOf(id: string) { return id.split('-')[1] || '—'; }
@@ -35,6 +35,9 @@ export default function Index() {
         let cmp = 0;
         switch (sort) {
           case 'value': cmp = numOf(a.africaExportValue) - numOf(b.africaExportValue); break;
+          case 'price': cmp = numOf(a.referencePrice) - numOf(b.referencePrice); break;
+          case 'africaShare': cmp = numOf(a.africaShare) - numOf(b.africaShare); break;
+          case 'reserve': cmp = numOf(a.snapshot.africanReserveValue) - numOf(b.snapshot.africanReserveValue); break;
           case 'yoy': cmp = yoyNum(a.yoyPrice) - yoyNum(b.yoyPrice); break;
           case 'conf': cmp = a.confidence - b.confidence; break;
           case 'name': cmp = a.name.localeCompare(b.name); break;
@@ -114,7 +117,7 @@ export default function Index() {
 
         {/* Sort pills + results count */}
         <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap', marginTop: 6 }}>
-          {(['rank', 'value', 'yoy', 'conf', 'name'] as SortKey[]).map((s) => (
+          {(['rank', 'value', 'price', 'africaShare', 'yoy', 'conf', 'name'] as SortKey[]).map((s) => (
             <button key={s} onClick={() => { if (sort === s) setAsc(!asc); else { setSort(s); setAsc(false); } }} style={{
               padding: '4px 8px', borderRadius: 5, fontSize: 9.5, fontWeight: 600,
               color: sort === s ? '#fff' : 'var(--text-4)',
