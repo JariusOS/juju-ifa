@@ -1,312 +1,583 @@
 'use client';
 
-import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { commodities } from '@/data/commodities';
-import { TYPE_LABEL } from '@/data/comids';
-import { nodeClassColor, nodeClassSoft } from '@/app/nodes/[id]/_components/theme';
 
-const TYPES = ['ALL', 'ENE', 'PMN', 'MET', 'CRM', 'FOR', 'MIN', 'AGR', 'MAR', 'CHM'];
+const regions = [
+  { name: 'North Africa', countries: 6, color: '#3B82F6', icon: '◈' },
+  { name: 'West Africa', countries: 16, color: '#10B981', icon: '◇' },
+  { name: 'Central Africa', countries: 9, color: '#F59E0B', icon: '◆' },
+  { name: 'East Africa', countries: 15, color: '#8B5CF6', icon: '◉' },
+  { name: 'Southern Africa', countries: 8, color: '#EF4444', icon: '◊' },
+];
 
-type SortKey = 'rank' | 'value' | 'yoy' | 'conf' | 'name' | 'weight' | 'global';
-type ViewMode = 'table' | 'cards' | 'grid' | 'list';
+const steps = [
+  { num: '01', title: 'Browse', desc: 'Explore the commodity and geography indexes with powerful filters and sort', icon: '⬡' },
+  { num: '02', title: 'Deep Dive', desc: 'Click any node to access detailed profiles with sections, metrics, and data', icon: '◇' },
+  { num: '03', title: 'Act', desc: 'Use intelligence briefings and connected node networks to make informed decisions', icon: '△' },
+];
 
-const SORT_LABELS: Record<SortKey, string> = {
-  rank: 'Rank', value: 'Export $', yoy: 'YoY', conf: 'Conf', name: 'Name', weight: 'Weight', global: 'Global $',
-};
+const features = [
+  {
+    title: 'Commodity Index',
+    icon: '▦',
+    desc: '18 African commodities ranked by export value, with real-time pricing, YoY trends, and confidence scores. Drill into supply chains, producers, and trade flows.',
+    stat: '18 Commodities',
+    link: '/explorer',
+    gradient: 'var(--accent)',
+  },
+  {
+    title: 'Geography Index',
+    icon: '◈',
+    desc: '54 African economies profiled across export value, GDP, demographics, and economic infrastructure. From Elite-tier powerhouses to Emerging frontiers.',
+    stat: '54 Economies',
+    link: '/geos',
+    gradient: '#3B82F6',
+  },
+  {
+    title: 'Intelligence Briefings',
+    icon: '▲',
+    desc: 'Top-10 intelligence briefings per commodity with classification, core analysis, strategic impact, and opportunity assessment.',
+    stat: '180+ Briefings',
+    link: '/explorer',
+    gradient: '#8B5CF6',
+  },
+];
 
-function typeOf(id: string) { return id.split('-')[1] || '—'; }
-function numOf(v: string) { const m = v.match(/([\d.]+)\s*([BMK])/); if (!m) return 0; const n = parseFloat(m[1]); return n * (m[2] === 'B' ? 1e9 : m[2] === 'M' ? 1e6 : 1e3); }
-function yoyNum(v: string) { const m = v.match(/[+-]?([\d.]+)/); return m ? parseFloat(m[0]) : 0; }
-
-export default function Index() {
-  const [q, setQ] = useState('');
-  const [type, setType] = useState('ALL');
-  const [sort, setSort] = useState<SortKey>('rank');
-  const [asc, setAsc] = useState(false);
-  const [view, setView] = useState<ViewMode>('table');
-
-  const list = useMemo(() => {
-    const ql = q.trim().toLowerCase();
-    return commodities
-      .filter((c) => type === 'ALL' || typeOf(c.id) === type)
-      .filter((c) => !ql || c.name.toLowerCase().includes(ql) || c.id.toLowerCase().includes(ql) || c.hsCode.toLowerCase().includes(ql) || c.nodeTags.some((t) => t.toLowerCase().includes(ql)))
-      .sort((a, b) => {
-        let cmp = 0;
-        switch (sort) {
-          case 'value': cmp = numOf(a.africaExportValue) - numOf(b.africaExportValue); break;
-          case 'yoy': cmp = yoyNum(a.yoyPrice) - yoyNum(b.yoyPrice); break;
-          case 'conf': cmp = a.confidence - b.confidence; break;
-          case 'name': cmp = a.name.localeCompare(b.name); break;
-          case 'weight': cmp = a.weight - b.weight; break;
-          case 'global': cmp = numOf(a.globalValue) - numOf(b.globalValue); break;
-          default: cmp = parseInt(a.id.split('-')[3] || '0') - parseInt(b.id.split('-')[3] || '0');
-        }
-        return asc ? cmp : -cmp;
-      });
-  }, [q, type, sort, asc]);
-
-  const totalExport = useMemo(() => commodities.reduce((s, c) => s + numOf(c.africaExportValue), 0), []);
-
+export default function LandingPage() {
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px 80px' }}>
-      {/* Header */}
-      <div style={{ padding: '20px 0 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <div>
-            <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-0.02em' }}>
-              Commodity Index
-            </h1>
-            <p style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 2 }}>
-              {commodities.length} African commodities · ${(totalExport / 1e9).toFixed(0)}B+ total export value
-            </p>
+    <div style={{ minHeight: 'calc(100vh - 48px)' }}>
+      {/* ═══════════════ HERO ═══════════════ */}
+      <section style={{
+        minHeight: 'calc(100vh - 48px)',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '60px 24px',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        {/* Background pattern */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: `
+            radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--accent) 6%, transparent), transparent),
+            radial-gradient(ellipse 60% 40% at 80% 100%, color-mix(in srgb, var(--accent) 4%, transparent), transparent),
+            radial-gradient(ellipse 50% 30% at 10% 60%, color-mix(in srgb, var(--geo) 4%, transparent), transparent)
+          `,
+          pointerEvents: 'none',
+        }} />
+
+        {/* Grid lines */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          backgroundImage: `
+            linear-gradient(color-mix(in srgb, var(--border) 30%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in srgb, var(--border) 30%, transparent) 1px, transparent 1px)
+          `,
+          backgroundSize: '80px 80px',
+          maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent)',
+          WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent)',
+        }} />
+
+        <div style={{ position: 'relative', textAlign: 'center', maxWidth: 900 }}>
+          {/* Badge */}
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            padding: '5px 14px', borderRadius: 20,
+            background: 'var(--accent-soft)',
+            border: '1px solid var(--accent-border)',
+            marginBottom: 28,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: 3, background: 'var(--accent)' }} />
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.04em' }}>
+              AFRICAN COMMODITY INTELLIGENCE
+            </span>
+          </div>
+
+          {/* Headline */}
+          <h1 style={{
+            fontSize: 'clamp(32px, 6vw, 64px)',
+            fontWeight: 800,
+            color: 'var(--text-1)',
+            letterSpacing: '-0.03em',
+            lineHeight: 1.08,
+            marginBottom: 20,
+          }}>
+            Africa&apos;s Commodity<br />
+            <span style={{ color: 'var(--accent)' }}>Intelligence Platform</span>
+          </h1>
+
+          {/* Subheadline */}
+          <p style={{
+            fontSize: 'clamp(14px, 2vw, 18px)',
+            color: 'var(--text-3)',
+            lineHeight: 1.6,
+            maxWidth: 640,
+            margin: '0 auto 40px',
+          }}>
+            Real-time data across 18 commodity sectors and 54 economies. Built for analysts,
+            investors, and policymakers who need the full picture.
+          </p>
+
+          {/* Stats bar */}
+          <div style={{
+            display: 'inline-flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: 0,
+            marginBottom: 40,
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: 12,
+            overflow: 'hidden',
+          }}>
+            {[
+              { value: '18', label: 'Commodities' },
+              { value: '54', label: 'Economies' },
+              { value: '$565B+', label: 'Export Value' },
+              { value: '5', label: 'Regions' },
+            ].map((s, i) => (
+              <div key={s.label} style={{
+                padding: '16px 28px',
+                borderRight: i < 3 ? '1px solid var(--border)' : 'none',
+                minWidth: 120,
+              }}>
+                <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: 'var(--font-mono, monospace)' }}>
+                  {s.value}
+                </div>
+                <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 }}>
+                  {s.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTAs */}
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/explorer" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '14px 32px', borderRadius: 10,
+              background: 'var(--accent)',
+              color: '#fff',
+              fontSize: 15, fontWeight: 700,
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              boxShadow: '0 4px 20px color-mix(in srgb, var(--accent) 30%, transparent)',
+            }}>
+              Explore the Data
+              <span style={{ fontSize: 18, lineHeight: 1 }}>→</span>
+            </Link>
+            <Link href="/geos" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '14px 32px', borderRadius: 10,
+              background: 'transparent',
+              color: 'var(--text-2)',
+              fontSize: 15, fontWeight: 700,
+              textDecoration: 'none',
+              border: '1px solid var(--border)',
+              transition: 'all 0.2s',
+            }}>
+              View Geography
+              <span style={{ fontSize: 18, lineHeight: 1 }}>→</span>
+            </Link>
           </div>
         </div>
+      </section>
 
-        {/* Search + Sort + View row */}
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
-          <div style={{ position: 'relative', flex: 1 }}>
-            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 13, color: 'var(--text-4)' }}>⌕</span>
-            <input value={q} onChange={(e) => setQ(e.target.value)}
-              placeholder="Search commodity, ID, tag, HS code…"
-              style={{
-                width: '100%', padding: '9px 12px 9px 34px', fontSize: 13, color: 'var(--text-1)',
-                background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8,
-                outline: 'none', fontFamily: 'inherit', transition: 'border-color 0.15s',
+      {/* ═══════════════ WHAT YOU GET ═══════════════ */}
+      <section style={{ padding: '80px 24px', maxWidth: 1120, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <span style={{
+            fontSize: 11, fontWeight: 700, color: 'var(--accent)',
+            textTransform: 'uppercase', letterSpacing: '0.1em',
+            display: 'block', marginBottom: 12,
+          }}>
+            Platform Capabilities
+          </span>
+          <h2 style={{
+            fontSize: 'clamp(24px, 4vw, 40px)',
+            fontWeight: 800,
+            color: 'var(--text-1)',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.15,
+          }}>
+            Everything You Need to<br />Understand African Markets
+          </h2>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: 20,
+        }}>
+          {features.map((f) => (
+            <Link key={f.title} href={f.link} style={{ textDecoration: 'none' }}>
+              <div style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: 14,
+                padding: 28,
+                height: '100%',
+                transition: 'all 0.2s',
+                cursor: 'pointer',
+                position: 'relative',
+                overflow: 'hidden',
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--accent-border)')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
-            />
-            {q && <button onClick={() => setQ('')} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-4)', cursor: 'pointer', fontSize: 12 }}>✕</button>}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border-strong)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.12)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                {/* Top accent line */}
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+                  background: f.gradient,
+                }} />
+
+                <div style={{
+                  width: 44, height: 44, borderRadius: 10,
+                  background: 'var(--accent-soft)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 20, marginBottom: 18,
+                }}>
+                  <span style={{ color: 'var(--accent)' }}>{f.icon}</span>
+                </div>
+
+                <div style={{
+                  fontSize: 10, fontWeight: 700, color: f.gradient,
+                  textTransform: 'uppercase', letterSpacing: '0.06em',
+                  marginBottom: 6,
+                }}>
+                  {f.stat}
+                </div>
+
+                <h3 style={{
+                  fontSize: 20, fontWeight: 700, color: 'var(--text-1)',
+                  marginBottom: 10, letterSpacing: '-0.01em',
+                }}>
+                  {f.title}
+                </h3>
+
+                <p style={{
+                  fontSize: 13, color: 'var(--text-3)', lineHeight: 1.65,
+                  margin: 0,
+                }}>
+                  {f.desc}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══════════════ HOW IT WORKS ═══════════════ */}
+      <section style={{
+        padding: '80px 24px',
+        background: 'var(--bg-surface)',
+        borderTop: '1px solid var(--border)',
+        borderBottom: '1px solid var(--border)',
+      }}>
+        <div style={{ maxWidth: 1120, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+            <span style={{
+              fontSize: 11, fontWeight: 700, color: 'var(--accent)',
+              textTransform: 'uppercase', letterSpacing: '0.1em',
+              display: 'block', marginBottom: 12,
+            }}>
+              Workflow
+            </span>
+            <h2 style={{
+              fontSize: 'clamp(24px, 4vw, 40px)',
+              fontWeight: 800,
+              color: 'var(--text-1)',
+              letterSpacing: '-0.02em',
+            }}>
+              From Data to Decisions
+            </h2>
           </div>
-          {/* View toggle */}
-          <div style={{ display: 'flex', gap: 1, background: 'var(--bg-surface)', borderRadius: 6, padding: 2, border: '1px solid var(--border)' }}>
-            {([['table', '≡'], ['cards', '▦'], ['grid', '◻'], ['list', '☰']] as [ViewMode, string][]).map(([v, icon]) => (
-              <button key={v} onClick={() => setView(v)} title={v} style={{
-                width: 30, height: 28, borderRadius: 4, border: 'none', cursor: 'pointer',
-                fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: view === v ? 'var(--accent)' : 'transparent',
-                color: view === v ? '#fff' : 'var(--text-4)',
-                transition: 'all 0.15s',
-              }}>{icon}</button>
+
+          <div style={{
+            display: 'flex',
+            gap: 0,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}>
+            {steps.map((s, i) => (
+              <div key={s.num} style={{
+                flex: '1 1 280px',
+                maxWidth: 360,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                padding: '0 24px',
+                position: 'relative',
+              }}>
+                {/* Connector line */}
+                {i < steps.length - 1 && (
+                  <div style={{
+                    position: 'absolute',
+                    top: 36,
+                    right: -8,
+                    width: 16,
+                    height: 2,
+                    background: 'var(--border)',
+                    display: 'none',
+                  }} className="step-connector" />
+                )}
+
+                <div style={{
+                  width: 72, height: 72,
+                  borderRadius: 16,
+                  background: 'var(--bg-card)',
+                  border: '2px solid var(--border)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 28, color: 'var(--accent)',
+                  marginBottom: 20,
+                  position: 'relative',
+                }}>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--text-4)', position: 'absolute', top: 6, right: 10 }}>
+                    {s.num}
+                  </span>
+                  {s.icon}
+                </div>
+
+                <h3 style={{
+                  fontSize: 18, fontWeight: 700, color: 'var(--text-1)',
+                  marginBottom: 8,
+                }}>
+                  {s.title}
+                </h3>
+
+                <p style={{
+                  fontSize: 13, color: 'var(--text-3)', lineHeight: 1.6,
+                  margin: 0, maxWidth: 280,
+                }}>
+                  {s.desc}
+                </p>
+              </div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* Type filter + Sort pills */}
-        <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
-          {TYPES.map((t) => {
-            const active = type === t;
-            const tc = t === 'ALL' ? 'var(--accent)' : nodeClassColor(t);
-            return (
-              <button key={t} onClick={() => setType(t)} style={{
-                padding: '4px 10px', borderRadius: 5, fontSize: 10, fontWeight: 600,
-                color: active ? '#fff' : 'var(--text-3)',
-                background: active ? tc : 'var(--bg-card)',
-                border: `1px solid ${active ? tc : 'var(--border)'}`,
-                cursor: 'pointer', transition: 'all 0.12s', whiteSpace: 'nowrap',
+      {/* ═══════════════ COVERAGE ═══════════════ */}
+      <section style={{ padding: '80px 24px', maxWidth: 1120, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <span style={{
+            fontSize: 11, fontWeight: 700, color: 'var(--accent)',
+            textTransform: 'uppercase', letterSpacing: '0.1em',
+            display: 'block', marginBottom: 12,
+          }}>
+            Continental Coverage
+          </span>
+          <h2 style={{
+            fontSize: 'clamp(24px, 4vw, 40px)',
+            fontWeight: 800,
+            color: 'var(--text-1)',
+            letterSpacing: '-0.02em',
+          }}>
+            54 Economies Across<br />5 Regions
+          </h2>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+          gap: 16,
+        }}>
+          {regions.map((r) => (
+            <div key={r.name} style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: 14,
+              padding: '28px 20px',
+              textAlign: 'center',
+              transition: 'all 0.2s',
+              cursor: 'default',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border-strong)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              {/* Accent top bar */}
+              <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+                background: r.color,
+                opacity: 0.8,
+              }} />
+
+              <div style={{
+                fontSize: 28, color: r.color, marginBottom: 12, lineHeight: 1,
+                opacity: 0.9,
               }}>
-                {t === 'ALL' ? 'All' : t}
-              </button>
-            );
-          })}
-          <span style={{ width: 1, height: 16, background: 'var(--border)', margin: '0 4px' }} />
-          {(['rank', 'value', 'yoy', 'conf', 'name'] as SortKey[]).map((s) => (
-            <button key={s} onClick={() => { if (sort === s) setAsc(!asc); else { setSort(s); setAsc(false); } }} style={{
-              padding: '4px 8px', borderRadius: 5, fontSize: 9.5, fontWeight: 600,
-              color: sort === s ? '#fff' : 'var(--text-4)',
-              background: sort === s ? 'var(--accent)' : 'transparent',
-              border: 'none', cursor: 'pointer', transition: 'all 0.12s', whiteSpace: 'nowrap',
-            }}>
-              {SORT_LABELS[s]}{sort === s ? (asc ? ' ↑' : ' ↓') : ''}
-            </button>
+                {r.icon}
+              </div>
+
+              <div style={{
+                fontSize: 32, fontWeight: 800, color: 'var(--text-1)',
+                fontFamily: 'var(--font-mono, monospace)',
+                lineHeight: 1,
+                marginBottom: 4,
+              }}>
+                {r.countries}
+              </div>
+
+              <div style={{
+                fontSize: 11, fontWeight: 600, color: 'var(--text-3)',
+                textTransform: 'uppercase', letterSpacing: '0.05em',
+              }}>
+                {r.countries === 1 ? 'Country' : 'Countries'}
+              </div>
+
+              <div style={{
+                fontSize: 13, fontWeight: 600, color: 'var(--text-2)',
+                marginTop: 10,
+              }}>
+                {r.name}
+              </div>
+
+              {/* Progress bar */}
+              <div style={{
+                marginTop: 14,
+                height: 4,
+                borderRadius: 2,
+                background: 'var(--border)',
+                overflow: 'hidden',
+              }}>
+                <div style={{
+                  height: '100%',
+                  width: `${(r.countries / 54) * 100}%`,
+                  borderRadius: 2,
+                  background: r.color,
+                  opacity: 0.7,
+                }} />
+              </div>
+            </div>
           ))}
-          <span style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--text-4)' }}>{list.length} results</span>
         </div>
-      </div>
 
-      {/* ── TABLE VIEW (CoinMarketCap style) ── */}
-      {view === 'table' && (
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
-            <thead>
-              <tr style={{ background: 'var(--bg-surface)' }}>
-                {['#', 'Commodity', 'Sector', 'Africa Export', 'Global Value', 'Africa Share', 'YoY', 'Price', 'Conf', 'W'].map((h, i) => (
-                  <th key={h} style={{
-                    padding: '8px 10px', textAlign: i === 1 || i === 2 ? 'left' : 'right',
-                    fontSize: 9, fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase',
-                    letterSpacing: '0.05em', borderBottom: '1px solid var(--border)',
-                    whiteSpace: 'nowrap',
-                  }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((c, idx) => {
-                const rank = parseInt(c.id.split('-')[3] || '0');
-                const tc = typeOf(c.id);
-                const tColor = nodeClassColor(tc);
-                return (
-                  <tr key={c.id} style={{
-                    borderBottom: '1px solid var(--border)',
-                    animation: `fade-in 0.2s ease-out ${Math.min(idx * 0.01, 0.3)}s both`,
-                  }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-card-hover)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
-                      <span className="mono" style={{ fontSize: 11, color: 'var(--text-4)', fontWeight: 600 }}>{rank}</span>
-                    </td>
-                    <td style={{ padding: '8px 10px', textAlign: 'left' }}>
-                      <Link href={`/nodes/${c.id}`} style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-                        <span style={{ width: 6, height: 6, borderRadius: 2, background: tColor, flexShrink: 0 }} />
-                        <div>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-1)' }}>{c.name}</div>
-                          <div className="mono" style={{ fontSize: 9, color: 'var(--text-4)' }}>{c.id}</div>
-                        </div>
-                      </Link>
-                    </td>
-                    <td style={{ padding: '8px 10px', textAlign: 'left' }}>
-                      <span style={{ fontSize: 9, fontWeight: 700, color: tColor, background: nodeClassSoft(tc), padding: '2px 6px', borderRadius: 3 }}>{tc}</span>
-                    </td>
-                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
-                      <span className="mono" style={{ fontWeight: 700, color: 'var(--text-1)' }}>{c.africaExportValue}</span>
-                    </td>
-                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
-                      <span className="mono" style={{ fontSize: 11, color: 'var(--text-3)' }}>{c.globalValue}</span>
-                    </td>
-                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
-                      <span className="mono" style={{ fontSize: 11, color: 'var(--text-3)' }}>{c.africaShare}</span>
-                    </td>
-                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
-                      <span className="mono" style={{ fontSize: 11, fontWeight: 600, color: c.yoyPrice.startsWith('+') ? 'var(--success)' : 'var(--danger)' }}>{c.yoyPrice}</span>
-                    </td>
-                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
-                      <span className="mono" style={{ fontSize: 11, color: 'var(--text-3)' }}>{c.referencePrice}</span>
-                    </td>
-                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
-                        <span style={{ width: 4, height: 4, borderRadius: 2, background: c.confidence >= 80 ? 'var(--success)' : c.confidence >= 60 ? 'var(--warning)' : 'var(--danger)' }} />
-                        <span className="mono" style={{ fontSize: 10, color: 'var(--text-3)' }}>{c.confidence}</span>
-                      </div>
-                    </td>
-                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
-                      <span className="mono" style={{ fontSize: 10, color: 'var(--text-4)' }}>{c.weight}</span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          {list.length === 0 && <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-4)', fontSize: 12 }}>No results</div>}
+        {/* Total bar */}
+        <div style={{
+          marginTop: 32,
+          padding: '20px 28px',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border)',
+          borderRadius: 12,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 12,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{
+              width: 10, height: 10, borderRadius: 5,
+              background: 'var(--accent)',
+              boxShadow: '0 0 8px color-mix(in srgb, var(--accent) 40%, transparent)',
+            }} />
+            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-1)' }}>
+              Total Coverage
+            </span>
+          </div>
+          <div style={{
+            display: 'flex', gap: 20, flexWrap: 'wrap',
+          }}>
+            <div>
+              <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--accent)', fontFamily: 'var(--font-mono, monospace)' }}>54</span>
+              <span style={{ fontSize: 12, color: 'var(--text-4)', marginLeft: 6 }}>Economies</span>
+            </div>
+            <div>
+              <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--accent)', fontFamily: 'var(--font-mono, monospace)' }}>18</span>
+              <span style={{ fontSize: 12, color: 'var(--text-4)', marginLeft: 6 }}>Commodities</span>
+            </div>
+            <div>
+              <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--accent)', fontFamily: 'var(--font-mono, monospace)' }}>$565B+</span>
+              <span style={{ fontSize: 12, color: 'var(--text-4)', marginLeft: 6 }}>Export Value</span>
+            </div>
+          </div>
         </div>
-      )}
+      </section>
 
-      {/* ── CARDS VIEW ── */}
-      {view === 'cards' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 8 }}>
-          {list.map((c, idx) => {
-            const rank = parseInt(c.id.split('-')[3] || '0');
-            const tc = typeOf(c.id);
-            const tColor = nodeClassColor(tc);
-            return (
-              <Link key={c.id} href={`/nodes/${c.id}`} style={{ textDecoration: 'none', animation: `fade-in 0.2s ease-out ${Math.min(idx * 0.02, 0.4)}s both` }}>
-                <div style={{
-                  background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 10, padding: 14,
-                  borderTop: `2px solid ${tColor}`, transition: 'all 0.15s', cursor: 'pointer', height: '100%',
-                }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-card-hover)'; e.currentTarget.style.borderColor = 'var(--border-strong)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--bg-card)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
-                    <span className="mono" style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-4)' }}>#{rank}</span>
-                    <span style={{ fontSize: 8, fontWeight: 700, color: tColor, background: nodeClassSoft(tc), padding: '2px 5px', borderRadius: 3 }}>{tc}</span>
-                  </div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-1)', marginBottom: 2 }}>{c.name}</div>
-                  <div className="mono" style={{ fontSize: 9, color: 'var(--text-4)', marginBottom: 10 }}>{c.hsCode}</div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                    <div>
-                      <div style={{ fontSize: 9, color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Africa Export</div>
-                      <div className="mono" style={{ fontSize: 15, fontWeight: 700, color: 'var(--accent)' }}>{c.africaExportValue}</div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div className="mono" style={{ fontSize: 11, fontWeight: 600, color: c.yoyPrice.startsWith('+') ? 'var(--success)' : 'var(--danger)' }}>{c.yoyPrice}</div>
-                      <div className="mono" style={{ fontSize: 9, color: 'var(--text-4)', marginTop: 2 }}>{c.confidence}% conf</div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+      {/* ═══════════════ FINAL CTA ═══════════════ */}
+      <section style={{
+        padding: '80px 24px',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        {/* Background glow */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 60% 50% at 50% 100%, color-mix(in srgb, var(--accent) 6%, transparent), transparent)',
+        }} />
+
+        <div style={{ position: 'relative', maxWidth: 600, margin: '0 auto' }}>
+          <h2 style={{
+            fontSize: 'clamp(28px, 5vw, 48px)',
+            fontWeight: 800,
+            color: 'var(--text-1)',
+            letterSpacing: '-0.03em',
+            lineHeight: 1.1,
+            marginBottom: 16,
+          }}>
+            Start Exploring<br />
+            <span style={{ color: 'var(--accent)' }}>Africa&apos;s Data</span>
+          </h2>
+
+          <p style={{
+            fontSize: 15,
+            color: 'var(--text-3)',
+            lineHeight: 1.6,
+            marginBottom: 36,
+          }}>
+            18 commodity modules · 54 country profiles · Dark, Light &amp; Cream themes
+          </p>
+
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/explorer" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '14px 32px', borderRadius: 10,
+              background: 'var(--accent)',
+              color: '#fff',
+              fontSize: 15, fontWeight: 700,
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              boxShadow: '0 4px 20px color-mix(in srgb, var(--accent) 30%, transparent)',
+            }}>
+              Start Exploring
+              <span style={{ fontSize: 18, lineHeight: 1 }}>→</span>
+            </Link>
+            <Link href="/geos" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '14px 32px', borderRadius: 10,
+              background: 'transparent',
+              color: 'var(--text-2)',
+              fontSize: 15, fontWeight: 700,
+              textDecoration: 'none',
+              border: '1px solid var(--border)',
+              transition: 'all 0.2s',
+            }}>
+              View Geography
+              <span style={{ fontSize: 18, lineHeight: 1 }}>→</span>
+            </Link>
+          </div>
         </div>
-      )}
-
-      {/* ── GRID VIEW (compact) ── */}
-      {view === 'grid' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 6 }}>
-          {list.map((c, idx) => {
-            const tc = typeOf(c.id);
-            const tColor = nodeClassColor(tc);
-            return (
-              <Link key={c.id} href={`/nodes/${c.id}`} style={{ textDecoration: 'none', animation: `fade-in 0.15s ease-out ${Math.min(idx * 0.01, 0.3)}s both` }}>
-                <div style={{
-                  background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, padding: 10,
-                  transition: 'all 0.12s', cursor: 'pointer', borderLeft: `2px solid ${tColor}`,
-                }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-card-hover)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--bg-card)')}
-                >
-                  <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-1)', marginBottom: 4, lineHeight: 1.3 }}>{c.name}</div>
-                  <div className="mono" style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>{c.africaExportValue}</div>
-                  <div className="mono" style={{ fontSize: 9, color: c.yoyPrice.startsWith('+') ? 'var(--success)' : 'var(--danger)', marginTop: 2 }}>{c.yoyPrice}</div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      )}
-
-      {/* ── LIST VIEW (detailed rows) ── */}
-      {view === 'list' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          {list.map((c, idx) => {
-            const rank = parseInt(c.id.split('-')[3] || '0');
-            const tc = typeOf(c.id);
-            const tColor = nodeClassColor(tc);
-            return (
-              <Link key={c.id} href={`/nodes/${c.id}`} style={{ textDecoration: 'none', animation: `fade-in 0.15s ease-out ${Math.min(idx * 0.015, 0.3)}s both` }}>
-                <div style={{
-                  background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 14px',
-                  display: 'flex', alignItems: 'center', gap: 12, borderLeft: `2px solid ${tColor}`,
-                  transition: 'all 0.12s', cursor: 'pointer',
-                }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-card-hover)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--bg-card)')}
-                >
-                  <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-4)', width: 28, textAlign: 'right', flexShrink: 0 }}>{rank}</span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)' }}>{c.name}</span>
-                      <span style={{ fontSize: 8, fontWeight: 700, color: tColor, background: nodeClassSoft(tc), padding: '1px 5px', borderRadius: 3 }}>{tc}</span>
-                      {c.flags?.length ? <span style={{ fontSize: 8, color: 'var(--danger)' }}>⚑</span> : null}
-                    </div>
-                    <div className="mono" style={{ fontSize: 9, color: 'var(--text-4)', marginTop: 1 }}>{c.id} · {c.hsCode}</div>
-                  </div>
-                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <div className="mono" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)' }}>{c.africaExportValue}</div>
-                    <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 1 }}>
-                      <span className="mono" style={{ fontSize: 9, color: c.yoyPrice.startsWith('+') ? 'var(--success)' : 'var(--danger)' }}>{c.yoyPrice}</span>
-                      <span className="mono" style={{ fontSize: 9, color: 'var(--text-4)' }}>{c.confidence}%</span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      )}
-
-      {list.length === 0 && <div style={{ textAlign: 'center', padding: 48, color: 'var(--text-4)', fontSize: 13 }}>No commodities match your search.</div>}
+      </section>
     </div>
   );
 }

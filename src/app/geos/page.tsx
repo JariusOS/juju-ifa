@@ -52,6 +52,10 @@ function parseShare(v: string): number {
   return m ? parseFloat(m[1]) : 0;
 }
 
+function findMetric(g: GeoNode, label: string): string {
+  return g.profileMetrics.find(m => m.label === label)?.value || '—';
+}
+
 export default function GeosIndex() {
   const [q, setQ] = useState('');
   const [tier, setTier] = useState<GeoTier | 'All'>('All');
@@ -194,12 +198,13 @@ export default function GeosIndex() {
       {/* ── TABLE VIEW (CoinMarketCap style) ── */}
       {view === 'table' && (
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <table style={{ width: '100%', minWidth: 1100, borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
               <tr style={{ background: 'var(--bg-surface)' }}>
-                {['#', 'Country', 'Tier', 'Region', 'Export Value', 'Share %', 'GDP', 'GDP/Capita', 'Population', 'Top Export'].map((h, i) => (
+                {['#', 'Country', 'Tier', 'Region', 'Export Value', 'Share %', 'GDP', 'GDP/Capita', 'Population', 'Life Exp', 'Min Wage', 'Top Export'].map((h, i) => (
                   <th key={h} style={{
-                    padding: '8px 10px', textAlign: i === 1 || i === 3 || i === 9 ? 'left' : 'right',
+                    padding: '8px 10px', textAlign: i === 1 || i === 3 || i === 11 ? 'left' : 'right',
                     fontSize: 9, fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase',
                     letterSpacing: '0.05em', borderBottom: '1px solid var(--border)',
                     whiteSpace: 'nowrap',
@@ -251,6 +256,12 @@ export default function GeosIndex() {
                     <td style={{ padding: '8px 10px', textAlign: 'right' }}>
                       <span className="mono" style={{ fontSize: 11, color: 'var(--text-3)' }}>{g.population}</span>
                     </td>
+                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
+                      <span className="mono" style={{ fontSize: 11, color: 'var(--text-3)' }}>{findMetric(g, 'Life Exp')}</span>
+                    </td>
+                    <td style={{ padding: '8px 10px', textAlign: 'right' }}>
+                      <span className="mono" style={{ fontSize: 11, color: 'var(--text-3)' }}>{findMetric(g, 'Min Wage')}</span>
+                    </td>
                     <td style={{ padding: '8px 10px', textAlign: 'left' }}>
                       <span style={{ fontSize: 10, color: 'var(--text-3)' }}>{g.top5Exports[0]?.name ?? '—'}</span>
                     </td>
@@ -259,6 +270,7 @@ export default function GeosIndex() {
               })}
             </tbody>
           </table>
+          </div>
           {list.length === 0 && <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-4)', fontSize: 12 }}>No results</div>}
         </div>
       )}

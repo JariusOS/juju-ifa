@@ -35,7 +35,7 @@ function Shell({ children }: { children: React.ReactNode }) {
         background: 'color-mix(in srgb, var(--bg) 88%, transparent)',
         backdropFilter: 'blur(12px)',
         borderBottom: '1px solid var(--border)',
-        display: 'flex', alignItems: 'center', padding: '0 20px', gap: 16,
+        display: 'flex', alignItems: 'center', padding: '0 16px', gap: 12, flexWrap: 'wrap', minHeight: 48,
       }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
           <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,7 +67,7 @@ function Shell({ children }: { children: React.ReactNode }) {
 
         {/* Nav links */}
         <nav style={{ display: 'flex', gap: 4, marginLeft: 8 }}>
-          {[{ href: '/', label: 'Commodities' }, { href: '/geos', label: 'Geography' }, { href: '/nodes', label: 'Nodes' }].map((n) => {
+          {[{ href: '/', label: 'Home' }, { href: '/explorer', label: 'Commodities' }, { href: '/geos', label: 'Geography' }, { href: '/nodes', label: 'Nodes' }].map((n) => {
             const active = n.href === '/' ? pathname === '/' : pathname.startsWith(n.href);
             return (
               <Link key={n.href} href={n.href} style={{
@@ -81,7 +81,7 @@ function Shell({ children }: { children: React.ReactNode }) {
         </nav>
 
         {/* Legend */}
-        <div style={{ display: 'flex', gap: 8, marginLeft: 12 }}>
+        <div className="hide-mobile" style={{ display: 'flex', gap: 8, marginLeft: 12 }}>
           {[
             { l: 'GEO', v: 'var(--geo)' }, { l: 'COM', v: 'var(--com)' }, { l: 'BIZ', v: 'var(--biz)' },
           ].map((n) => (
@@ -95,7 +95,7 @@ function Shell({ children }: { children: React.ReactNode }) {
           <ThemeToggle />
         </div>
       </header>
-      <main style={{ marginTop: 48, minHeight: 'calc(100vh - 48px)' }}>{children}</main>
+      <main style={{ marginTop: 52, minHeight: 'calc(100vh - 48px)' }}>{children}</main>
     </>
   );
 }
