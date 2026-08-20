@@ -17,6 +17,11 @@ import { cobalt } from './cobalt';
 import { bauxite } from './bauxite';
 import { coal } from './coal';
 import { refinedProducts } from './refined-products';
+import { coffee } from './coffee';
+import { manganese } from './manganese';
+import { citrus } from './citrus';
+import { aluminium } from './aluminium';
+import { cashew } from './cashew';
 
 // MASTER MODULES — the authority. Never mutated by the commodity index.
 // Only identity fields (derived comId, nodeTags, rankLabel, flags) are
@@ -35,6 +40,11 @@ const MASTER_MODULES: Record<string, Commodity> = {
   'Bauxite': bauxite,
   'Coal': coal,
   'Refined Petroleum': refinedProducts,
+  'Coffee': coffee,
+  'Manganese': manganese,
+  'Citrus': citrus,
+  'Aluminium': aluminium,
+  'Cashew': cashew,
 };
 
 function attach(c: Commodity, rec: (typeof MASTER_100)[number]): Commodity {

@@ -2383,7 +2383,7 @@ export const MASTER_100: MasterRecord[] = [
   },
   {
     "rank": 15,
-    "name": "Manganese Ore",
+    "name": "Manganese",
     "exportValue": "~$11B",
     "exportNum": 11,
     "exportUnit": "B",
@@ -2554,7 +2554,7 @@ export const MASTER_100: MasterRecord[] = [
   },
   {
     "rank": 16,
-    "name": "Citrus Fruits",
+    "name": "Citrus",
     "exportValue": "~$10B",
     "exportNum": 10,
     "exportUnit": "B",
@@ -3402,7 +3402,7 @@ export const MASTER_100: MasterRecord[] = [
   },
   {
     "rank": 21,
-    "name": "Cashew Nuts",
+    "name": "Cashew",
     "exportValue": "~$8B",
     "exportNum": 8,
     "exportUnit": "B",

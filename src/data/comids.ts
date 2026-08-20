@@ -35,13 +35,13 @@ export const COM_DEFS: [number, ComType, string][] = [
   [12, 'ENE', 'COL'],  // Coal
   [13, 'ENE', 'RPT'],  // Refined Petroleum
   [14, 'AGR', 'COF'],  // Coffee
-  [15, 'CRM', 'MNG'],  // Manganese Ore
-  [16, 'AGR', 'CIT'],  // Citrus Fruits
+  [15, 'CRM', 'MNG'],  // Manganese
+  [16, 'AGR', 'CIT'],  // Citrus
   [17, 'MET', 'ALU'],  // Aluminium
   [18, 'AGR', 'CTN'],  // Cotton
   [19, 'AGR', 'TOB'],  // Tobacco
   [20, 'AGR', 'TEA'],  // Tea
-  [21, 'AGR', 'CSH'],  // Cashew Nuts
+  [21, 'AGR', 'CSH'],  // Cashew
   [22, 'CHM', 'FRT'],  // Fertilizers
   [23, 'CRM', 'NIC'],  // Nickel
   [24, 'MET', 'ZNC'],  // Zinc
