@@ -12,7 +12,7 @@ export default function NodeProfile() {
 
   if (commodity) {
     return (
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '0 16px', background: '#080808', minHeight: '100vh' }}>
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 16px', background: '#070D17', minHeight: '100vh' }}>
         <CommodityProfile c={commodity} />
       </div>
     );
