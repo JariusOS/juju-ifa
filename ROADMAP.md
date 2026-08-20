@@ -5,184 +5,110 @@
 ```
 juju-ifa/
 ├── src/data/                    ← BACKEND: All intelligence data
-│   ├── types.ts                 ← Commodity, Section, Briefing interfaces
-│   ├── commodities.ts           ← Registry: master modules + index overlay
-│   ├── comids.ts                ← COM ID scheme (TYPE-NAME3-RANK)
+│   ├── types.ts                 ← Commodity + GeoNode interfaces
+│   ├── commodities.ts           ← Registry: 18 master modules
+│   ├── geonodes.ts              ← 54 GeoNode country profiles
+│   ├── comids.ts                ← COM ID scheme
 │   ├── sections.ts              ← buildSections() assembler
-│   ├── module-extras.ts         ← Advanced sections + briefings
-│   ├── build.ts                 ← Clean factory for index entries
-│   ├── master-100.ts            ← 100-record commodity index
+│   ├── module-extras.ts         ← 18 module extras + briefings
+│   ├── build.ts                 ← Clean factory
+│   ├── master-100.ts            ← 100-record index
 │   ├── master-types.ts          ← Taxonomy helpers
 │   ├── countries.ts             ← Country names + flags
-│   └── *.ts                     ← 13 master module files (immutable)
+│   └── *.ts                     ← 18 master module files (immutable)
 │
 ├── src/app/                     ← FRONTEND: Next.js App Router
-│   ├── layout.tsx               ← Standalone IFA shell
-│   ├── page.tsx                 ← Commodity index (search + feed)
+│   ├── page.tsx                 ← Landing page (conversion)
+│   ├── explorer/page.tsx        ← Commodity Index (the app)
+│   ├── geos/page.tsx            ← Geography Index
+│   ├── geos/[slug]/page.tsx     ← Country profile
 │   ├── nodes/[id]/page.tsx      ← Commodity profile router
 │   └── nodes/[id]/_components/  ← UI components
-│       ├── CommodityProfile.tsx ← Profile layout (hero + sections)
+│       ├── CommodityProfile.tsx ← Profile layout
 │       ├── SectionCard.tsx      ← Generic section renderer
 │       ├── MiniDonut.tsx        ← SVG donut chart
 │       ├── BarGroup.tsx         ← Histogram bars
-│       ├── theme.ts             ← Vulcan theme
-│       └── *View.tsx            ← Legacy tab views (DNA, Info, etc.)
+│       └── theme.ts             ← Theme constants
 │
-├── src/api/                     ← API routes
-│   └── neo4j/route.ts           ← Neo4j query endpoint (for non-commodity nodes)
+├── src/lib/
+│   └── theme-context.tsx        ← ThemeProvider (dark/light/cream)
+│
+└── src/api/
+    └── neo4j/route.ts           ← Neo4j query endpoint
 ```
-
-### Data Authority Model
-- **Master modules** (13 files) = immutable authority. Never modify without permission.
-- **100-record index** = reference-grade (~50% confidence). Never overrides master data.
-- **Registry** (`commodities.ts`) combines both: master modules take priority, index fills gaps.
-- **Sections engine** (`sections.ts`) assembles 17+ structured blocks from raw Commodity fields.
 
 ---
 
-## Completed — Session 19 Aug 2026
+## Completed — Phase 1-4 (19-20 Aug 2026)
 
-- [x] 13 master module data files with full structured intelligence
+### Data Layer
+- [x] 18 master module data files (Crude Oil, Copper, Gold, Cocoa, PGMs, Diamonds, Iron Ore, Cobalt, Coal, Bauxite, Phosphate, Natural Gas/LNG, Refined Products, Coffee, Manganese, Citrus, Aluminium, Cashew)
 - [x] 100-record commodity index parsed from jujuCOM-final.md
 - [x] COM ID scheme: COM-{TYPE}-{NAME3}-{RANK}, validated 100/100
 - [x] Sections engine: buildSections() + extrasToSections()
-- [x] Module extras: strategic/ecosystem/countries/risk/opportunities/drivers/history/nuggets/network/summary for all 13 masters
-- [x] Crude Oil full Intelligence Briefing (Top 10 items)
-- [x] Generic SectionCard renderer (prose/kv/chips/table/ranking/risk/network)
-- [x] CommodityProfile: hero + sticky rail + sections + briefing
-- [x] Commodity index: search + type rails + sort + ranked feed
+- [x] Module extras: full intelligence for all 18 modules
+- [x] Intelligence Briefings: Top-10 format for all 18 modules
+- [x] 54 GeoNode country profiles (7 Elite, 20 Standard, 27 Emerging)
+- [x] GeoNode data: export value, GDP, demographics, top 5 exports, economic assets, narratives
 - [x] Country names + flags for ~103 countries
-- [x] Standalone IFA shell (no dashboard/graph chrome)
-- [x] tsc + lint + next build all green
-- [x] Dev server verified on :3000, prod on :3210
+
+### UI Layer
+- [x] Landing page at `/` with hero, stats, value props, CTA
+- [x] Commodity Index at `/explorer` — 4 view modes (table/cards/grid/list)
+- [x] Geography Index at `/geos` — 4 view modes, tier/region filters
+- [x] Commodity Profile — hero, sections, briefing, connected nodes
+- [x] Geo Profile — hero, exports, metrics, assets, news, briefing
+- [x] Similar/Related/Mentioned bottom sections on all profile pages
+- [x] Auto-generated intelligence news on geo profiles
+- [x] Theme system: Dark (#0B1120), Light (#F8FAFC), Cream (#FAF7F0)
+- [x] Font: Inter (UI) + JetBrains Mono (data)
+- [x] Logo: SVG bilateral symmetry + portal symbol
+- [x] Mobile responsive: horizontal table scroll, compact cells
+- [x] Sort/filter on separate lines for both indexes
+
+### Quality
+- [x] tsc --noEmit: zero errors
+- [x] next build: all routes compile
+- [x] Git: 9 commits, tagged v0.1-ifa-one
+- [x] GitHub: all code pushed and backed up
 
 ---
 
-## Phase 2 — Flesh Out Remaining 87 Commodities (Priority)
+## Phase 5 — Next Steps (Week of 21-27 Aug 2026)
 
-### Goal
-Expand the 87 index-only commodities to have full master-module-level intelligence data, starting with the highest-value exports.
+### Priority 1: Data Enrichment
+- [ ] Expand remaining index-only commodities to master-module level
+- [ ] Fill production/consumer/reserve data gaps
+- [ ] Add missing Intelligence Briefings (17 of 18 complete)
+- [ ] Historical trend data (5-year export/price/production)
 
-### Approach
-1. **Auto-populate from existing index data** — Each of the 100 records already has: export value, YoY, country, HS code, confidence, node tags. Fill in what we can without external research.
-2. **Group by type** and batch-expand:
-   - **ENE** (7): Crude Oil ✓, LNG ✓, Coal ✓, Refined Products ✓, Natural Gas, Uranium, Electricity
-   - **PMN** (2): Gold ✓, Silver
-   - **MET** (12): Iron Ore ✓, Copper ✓, PGMs ✓, Diamonds ✓, Cobalt ✓, Aluminium*, Aluminium Ingots*, Steel & Iron*, Tin, Zinc, Lead, Nickel, Manganese
-   - **CRM** (4): Copper ✓, Rare Earths, Lithium, Titanium
-   - **MIN** (8): Bauxite ✓, Phosphate ✓, Fluorspar, Gypsum, Magnesium, Mica, Talc, Zircon
-   - **AGR** (25+): Cocoa ✓, Coffee, Cotton, Tobacco, Sesame, Cashew, Rubber, Vanilla, Cloves, etc.
-   - **MAR** (3): Salt, Seaweed, Fish/Shrimp
-   - **FOR** (5): Gum Arabic, Timber, African Blackwood, Bamboo, Cork
-   - **CHM** (2): Fertilizers, Petrochemicals
-3. **For each commodity**, generate a module file with:
-   - Snapshot (type, HS, lead country, lead value, summary)
-   - Production (top 3–5 producers)
-   - Trade (top 6 export destinations, top 3 import sources)
-   - DNA (infrastructure requirements, compliance, storage)
-   - Price benchmarks (where available)
-   - Strategic intelligence (3–5 bullet points)
-   - Risk / Opportunities (3–5 each)
-   - Historical trend (5-year direction if known)
+### Priority 2: UI Polish
+- [ ] Chart components (line charts for price trends, bar charts for production)
+- [ ] Map visualization for trade routes and country connections
+- [ ] Persona switcher for briefings (Investor/Trader/Policy/Logistics)
+- [ ] Alert system for value spikes and YoY anomalies
+- [ ] Search typeahead with autocomplete
 
-### Blockers
-- Many commodities lack production/consumer/reserve data in the index. Need either:
-  - External data source (UN Comtrade, USGS, IEA, etc.)
-  - Captain's domain knowledge to fill gaps
-  - Conservative approach: only populate fields where we have high confidence
+### Priority 3: Node Types
+- [ ] Port Nodes (Apapa, Durban, Mombasa, Tema, Dar es Salaam)
+- [ ] Belt & Basin Nodes (Congo Copperbelt, Witwatersrand)
+- [ ] Special Economic Zones
+- [ ] Industrial Hubs
+
+### Priority 4: Backend
+- [ ] Clean data API (/api/commodities, /api/geos)
+- [ ] Data validation schemas (Zod)
+- [ ] Data compiler for build-time assembly
 
 ---
 
-## Phase 3 — Node Types Beyond Commodities
+## Known Issues / Errors to Tackle
 
-### Geo Nodes (Countries/Regions)
-- Country profiles with flag, population, GDP, trade balance
-- Regional groupings (ECOWAS, EAC, SADC, AfCFTA zones)
-- Production hotspots per commodity
-
-### Port Nodes
-- Seaports (Apapa/Lagos, Durban, Mombasa, Tema, Dar es Salaam, etc.)
-- Dry ports / inland container depots
-- Cargo throughput, draft, berth count, modal connectivity
-- Connected commodities (what flows through each port)
-
-### Belt & Basin Nodes
-- Mining basins (Congo Copperbelt, Witwatersrand, Pilbara equivalent)
-- Oil basins (Niger Delta, Johan Sverdrift, presalt)
-- Pipeline networks and corridors
-- Linked to origin sections in commodity modules
-
-### Special Economic Zones
-- Free trade zones, industrial parks, export processing zones
-- Tax incentives, infrastructure, connected ports
-- Active commodities processed in each zone
-
-### Industrial Hubs
-- Smelting/refining complexes
-- Agro-processing zones
-- Petrochemical clusters
-
----
-
-## Phase 4 — Historical Data (5-Year)
-
-### For Each Commodity
-- Export value trend (2021–2026)
-- Production volume trend
-- Price trend (annual average)
-- Trade flow shifts (new destinations, lost markets)
-- Significant events timeline
-
-### For Ports
-- Throughput trend (TEUs, tonnage)
-- Capacity utilization
-- Expansion projects
-
----
-
-## Phase 5 — UI/UX Advancements
-
-### Module-Aware 3-Tab Profile
-- **MASTER** tab: All 17 sections with expand/collapse
-- **DNA** tab: Infrastructure, compliance, logistics details
-- **ORIGIN** tab: Geographic/basin/port/zone intelligence
-- Chart/list toggle switches per section
-- Persona switcher for Intelligence Briefings (Investor / Trader / Policy / Logistics)
-
-### Commodity Images
-- Hero images per commodity (photographs, satellite, diagrams)
-- Flag overlays for lead country
-- Map visualization for trade routes
-
-### Social Media Intelligence Interface
-- Card-based feed with swipe/scroll
-- Real-time data injection engine
-- Commodity-to-commodity linking ("also traded by...")
-- Alert system for value spikes, YoY anomalies
-
-### Landing Page
-- Hero with animated commodity grid
-- Featured Intelligence Briefings
-- Regional heatmap
-- Search bar with typeahead
-
----
-
-## Phase 6 — Backend Reorganization
-
-### Refactor Goals
-- Separate data layer from UI completely
-- Create a clean data API (`/api/commodities`, `/api/commodities/[id]`, etc.)
-- Make all data consumable by any frontend (not just Next.js)
-- Standardize section types across all commodities
-- Add data validation schemas (Zod or similar)
-- Create a data compiler that assembles the final commodity objects at build time
-
-### Labeling Standards
-- Consistent field naming across all modules
-- Section key constants (no magic strings)
-- Type-safe section accessors
-- Documentation of every field's meaning and source
+1. **Reserve Value sorting** — Most `africanReserveValue` entries are text descriptions, not numeric. Need to standardize to numeric values for proper sorting.
+2. **Legacy View components** — DNA/Info/Origin/Master views in `nodes/[id]/_components/` are unused. Can be cleaned up.
+3. **Neo4j integration** — `/api/neo4j` endpoint exists but is not connected to any frontend features yet.
+4. **Commodity count discrepancy** — Registry has 18 modules but index has 100 records. 82 index-only commodities need expansion.
+5. **Geo profile Connected Commodities links** — Links to `/nodes/{name}` use commodity name as ID, which may not match actual COM IDs. Needs resolver.
 
 ---
 
@@ -191,8 +117,9 @@ Expand the 87 index-only commodities to have full master-module-level intelligen
 - **JUJU** = Juice (the platform)
 - **IFA** = Intelligence Fusion Architecture
 - **Captain** = the boss
-- **Node** = any entity in the knowledge graph (commodity, country, port, zone, etc.)
-- **Module** = a structured data bundle for a commodity (13 master modules exist)
-- **Section** = one block within a module (e.g., "Strategic Intelligence", "Risk")
-- **Briefing** = the Intelligence Briefing (Top 10 format)
-- **COM ID** = `COM-{TYPE}-{NAME3}-{RANK}` unique identifier
+- **Node** = any entity (commodity, country, port, zone)
+- **Module** = structured data bundle for a commodity
+- **Section** = one block within a module
+- **Briefing** = Intelligence Briefing (Top 10 format)
+- **COM ID** = `COM-{TYPE}-{NAME3}-{RANK}`
+- **GeoNode** = `GEO-{ISO3}-{RANK}`
