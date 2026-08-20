@@ -1,48 +1,20 @@
-import { THEME } from './theme';
+export interface BarEntry { label: string; value: string; valueNum: number; }
 
-export interface BarEntry {
-  label: string;
-  value: string;
-  valueNum: number;
-}
-
-interface BarGroupProps {
-  data: BarEntry[];
-  color?: string;
-  height?: number;
-  title: string;
-}
-
-export default function BarGroup({ data, color = THEME.accent, height = 72, title }: BarGroupProps) {
+export default function BarGroup({ data, color = 'var(--accent)', height = 64, title }: { data: BarEntry[]; color?: string; height?: number; title: string }) {
   const max = Math.max(...data.map((d) => d.valueNum));
-  const usable = height - 28;
-
+  const usable = height - 24;
   return (
-    <div style={{
-      background: THEME.surface, border: `1px solid ${THEME.border}`,
-      borderRadius: 10, padding: 12, flex: 1, minWidth: 0,
-    }}>
-      <div style={{ fontSize: 9, fontWeight: 700, color: THEME.dim, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-        {title}
-      </div>
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: usable, marginTop: 8 }}>
+    <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 8, padding: 10, flex: 1, minWidth: 0 }}>
+      <div style={{ fontSize: 8, fontWeight: 700, color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{title}</div>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: usable, marginTop: 6 }}>
         {data.map((d, i) => {
-          const h = Math.max(6, (d.valueNum / max) * usable);
-          const opacity = 0.2 + 0.8 * (d.valueNum / max);
-          return (
-            <div key={i} style={{
-              width: 12, height: h, background: color, opacity,
-              borderRadius: '3px 3px 0 0', transition: 'height 0.3s ease',
-            }} />
-          );
+          const h = Math.max(4, (d.valueNum / max) * usable);
+          const opacity = 0.25 + 0.75 * (d.valueNum / max);
+          return <div key={i} style={{ width: 10, height: h, background: color, opacity, borderRadius: '2px 2px 0 0' }} />;
         })}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-        {data.map((d, i) => (
-          <span key={i} style={{ fontSize: 8, color: THEME.dim, textAlign: 'center' }}>
-            {d.label}
-          </span>
-        ))}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+        {data.map((d, i) => <span key={i} style={{ fontSize: 7, color: 'var(--text-4)', textAlign: 'center' }}>{d.label}</span>)}
       </div>
     </div>
   );

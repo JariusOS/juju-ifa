@@ -1,41 +1,17 @@
-import { THEME } from './theme';
-
-interface MiniDonutProps {
-  value: number;
-  color?: string;
-  track?: string;
-  size?: number;
-  stroke?: number;
-  label?: React.ReactNode;
-  labelColor?: string;
-}
-
-export default function MiniDonut({
-  value,
-  color = THEME.accent,
-  track = THEME.track,
-  size = 70,
-  stroke = 5,
-  label,
-  labelColor = THEME.white,
-}: MiniDonutProps) {
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const clamped = Math.min(100, Math.max(0, value));
-  const offset = circumference - (clamped / 100) * circumference;
-
+export default function MiniDonut({ value, color = 'var(--accent)', size = 60, stroke = 4, label, labelColor = 'var(--text-1)' }: {
+  value: number; color?: string; size?: number; stroke?: number; label?: React.ReactNode; labelColor?: string;
+}) {
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (Math.min(100, Math.max(0, value)) / 100) * circ;
   return (
     <div style={{ position: 'relative', width: size, height: size }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={track} strokeWidth={stroke} />
-        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={color} strokeWidth={stroke}
-          strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset}
-          style={{ transition: 'stroke-dashoffset 0.5s ease' }} />
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="var(--track)" strokeWidth={stroke} />
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 13, fontWeight: 800, color: labelColor, fontFamily: 'ui-monospace, monospace' }}>
-          {label}
-        </span>
+        <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: labelColor }}>{label}</span>
       </div>
     </div>
   );
