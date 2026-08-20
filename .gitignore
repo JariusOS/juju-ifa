@@ -39,4 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-dev-err.log\ndev.log\nprod-err.log\nprod.log\nstart-prod.bat
+dev-err.log
+dev.log
+prod-err.log
+prod.log
+start-prod.bat

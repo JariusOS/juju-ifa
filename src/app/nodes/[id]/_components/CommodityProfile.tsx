@@ -1,7 +1,9 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 import type { Commodity } from '@/data/types';
+import { commodities } from '@/data/commodities';
 import { THEME, nodeClassColor, nodeClassSoft } from './theme';
 import SectionCard from './SectionCard';
 import MiniDonut from './MiniDonut';
@@ -83,6 +85,39 @@ export default function CommodityProfile({ c }: { c: Commodity }) {
   const sections = c.sections || [];
   const tc = c.id.split('-')[1] || 'COM';
   const tColor = nodeClassColor(tc);
+
+  const similarNodes = useMemo(() => {
+    return commodities
+      .filter((o) => o.id !== c.id && o.id.split('-')[1] === tc)
+      .slice(0, 6);
+  }, [c.id, tc]);
+
+  const relatedNodes = useMemo(() => {
+    return commodities
+      .filter((o) => {
+        if (o.id === c.id) return false;
+        const shared = o.nodeTags.filter((t) => c.nodeTags.includes(t));
+        return shared.length >= 2;
+      })
+      .sort((a, b) => {
+        const aShared = a.nodeTags.filter((t) => c.nodeTags.includes(t)).length;
+        const bShared = b.nodeTags.filter((t) => c.nodeTags.includes(t)).length;
+        return bShared - aShared;
+      })
+      .slice(0, 6);
+  }, [c.id, c.nodeTags]);
+
+  const mentionedNodes = useMemo(() => {
+    const cLower = c.name.toLowerCase();
+    const tagSet = new Set(c.nodeTags.map((t) => t.toLowerCase()));
+    return commodities
+      .filter((o) => {
+        if (o.id === c.id) return false;
+        if (o.nodeTags.some((t) => t.toLowerCase() === cLower)) return true;
+        return o.nodeTags.some((t) => tagSet.has(t.toLowerCase()));
+      })
+      .slice(0, 6);
+  }, [c.id, c.name, c.nodeTags]);
 
   return (
     <div style={{ paddingBottom: 40 }}>
@@ -209,6 +244,84 @@ export default function CommodityProfile({ c }: { c: Commodity }) {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Similar Nodes */}
+      {similarNodes.length > 0 && (
+        <div style={{ background: THEME.card, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: 16, marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+            <span style={{ width: 2, height: 12, borderRadius: 1, background: tColor }} />
+            <span style={{ fontSize: 10, fontWeight: 700, color: THEME.t1, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Similar Nodes</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+            {similarNodes.map((s) => {
+              const stc = s.id.split('-')[1] || 'COM';
+              return (
+                <Link key={s.id} href={`/nodes/${s.id}`} style={{ textDecoration: 'none' }}>
+                  <div style={{ background: THEME.surface, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: '8px 10px' }}>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: THEME.t1, marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.name}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 2 }}>
+                      <span style={{ fontSize: 8, fontWeight: 700, color: nodeClassColor(stc), background: nodeClassSoft(stc), padding: '1px 4px', borderRadius: 3 }}>{stc}</span>
+                    </div>
+                    <div className="mono" style={{ fontSize: 9, color: THEME.dim }}>{s.africaExportValue}</div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Related Nodes */}
+      {relatedNodes.length > 0 && (
+        <div style={{ background: THEME.card, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: 16, marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+            <span style={{ width: 2, height: 12, borderRadius: 1, background: 'var(--info)' }} />
+            <span style={{ fontSize: 10, fontWeight: 700, color: THEME.t1, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Related Nodes</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+            {relatedNodes.map((r) => {
+              const rtc = r.id.split('-')[1] || 'COM';
+              return (
+                <Link key={r.id} href={`/nodes/${r.id}`} style={{ textDecoration: 'none' }}>
+                  <div style={{ background: THEME.surface, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: '8px 10px' }}>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: THEME.t1, marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.name}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 2 }}>
+                      <span style={{ fontSize: 8, fontWeight: 700, color: nodeClassColor(rtc), background: nodeClassSoft(rtc), padding: '1px 4px', borderRadius: 3 }}>{rtc}</span>
+                    </div>
+                    <div className="mono" style={{ fontSize: 9, color: THEME.dim }}>{r.africaExportValue}</div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Mentioned in Network */}
+      {mentionedNodes.length > 0 && (
+        <div style={{ background: THEME.card, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: 16, marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+            <span style={{ width: 2, height: 12, borderRadius: 1, background: 'var(--purple)' }} />
+            <span style={{ fontSize: 10, fontWeight: 700, color: THEME.t1, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Mentioned in Network</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+            {mentionedNodes.map((m) => {
+              const mtc = m.id.split('-')[1] || 'COM';
+              return (
+                <Link key={m.id} href={`/nodes/${m.id}`} style={{ textDecoration: 'none' }}>
+                  <div style={{ background: THEME.surface, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: '8px 10px' }}>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: THEME.t1, marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.name}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 2 }}>
+                      <span style={{ fontSize: 8, fontWeight: 700, color: nodeClassColor(mtc), background: nodeClassSoft(mtc), padding: '1px 4px', borderRadius: 3 }}>{mtc}</span>
+                    </div>
+                    <div className="mono" style={{ fontSize: 9, color: THEME.dim }}>{m.africaExportValue}</div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}

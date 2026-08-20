@@ -38,24 +38,36 @@ function Shell({ children }: { children: React.ReactNode }) {
         display: 'flex', alignItems: 'center', padding: '0 20px', gap: 16,
       }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-          <span style={{
-            width: 26, height: 26, borderRadius: 7,
-            background: 'linear-gradient(135deg, var(--geo), color-mix(in srgb, var(--geo) 70%, #000))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontWeight: 800, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
-          }}>J</span>
-          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-0.02em' }}>
-            JUJU <span style={{ color: 'var(--accent)', fontWeight: 600 }}>IFA</span>
-          </span>
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Outer arcs - black */}
+            <path d="M5 13C5 8.58 8.58 5 13 5C17.42 5 21 8.58 21 13" stroke="#1E293B" strokeWidth="2.2" strokeLinecap="round" fill="none"/>
+            <path d="M5 13C5 17.42 8.58 21 13 21C17.42 21 21 17.42 21 13" stroke="#1E293B" strokeWidth="2.2" strokeLinecap="round" fill="none"/>
+            {/* Inner arcs - gold */}
+            <path d="M8 13C8 10.24 10.24 8 13 8C15.76 8 18 10.24 18 13" stroke="#D4A82E" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+            <path d="M8 13C8 15.76 10.24 18 13 18C15.76 18 18 15.76 18 13" stroke="#D4A82E" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+            {/* Central pillar - gold */}
+            <rect x="12" y="7" width="2" height="12" rx="1" fill="#D4A82E"/>
+            {/* Portal/signal dots */}
+            <circle cx="13" cy="6" r="1.2" fill="#D4A82E"/>
+            <circle cx="13" cy="20" r="1.2" fill="#D4A82E"/>
+          </svg>
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
+            <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-1)', letterSpacing: '-0.02em' }}>
+              JUJU <span style={{ color: 'var(--accent)' }}>IFA</span>
+            </span>
+            <span style={{ fontSize: 8, fontWeight: 600, color: 'var(--text-4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              Explorer
+            </span>
+          </div>
         </Link>
 
         <span style={{ fontSize: 9, color: 'var(--text-4)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>
-          Commodity Intelligence
+          African Commodity Intelligence
         </span>
 
         {/* Nav links */}
         <nav style={{ display: 'flex', gap: 4, marginLeft: 8 }}>
-          {[{ href: '/', label: 'Index' }, { href: '/nodes', label: 'Nodes' }].map((n) => {
+          {[{ href: '/', label: 'Commodities' }, { href: '/geos', label: 'Geography' }, { href: '/nodes', label: 'Nodes' }].map((n) => {
             const active = n.href === '/' ? pathname === '/' : pathname.startsWith(n.href);
             return (
               <Link key={n.href} href={n.href} style={{
@@ -92,8 +104,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" data-theme="dark">
       <head>
-        <title>JUJU IFA — Commodity Intelligence Fusion Architecture</title>
-        <meta name="description" content="Intelligence search across Africa's commodity supply chain ecosystem" />
+        <title>JUJU IFA Explorer — African Commodity Intelligence</title>
+        <meta name="description" content="Comprehensive intelligence explorer across Africa's 18 commodity sectors and 54 economies" />
       </head>
       <body>
         <ThemeProvider>

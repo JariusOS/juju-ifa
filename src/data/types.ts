@@ -130,3 +130,48 @@ export interface Commodity {
   sections?: import('./sections').Section[];
   briefing?: import('./sections').Briefing;
 }
+
+/* ───────── GeoNode (Country) ───────── */
+
+export type GeoTier = 'Elite' | 'Standard' | 'Emerging';
+
+export interface GeoTopExport {
+  name: string;
+  value: string;
+  share: string;
+  comNodeId?: string;
+}
+
+export interface GeoProfileMetric {
+  label: string;
+  value: string;
+}
+
+export interface GeoNode {
+  id: string;
+  slug: string;
+  rank: number;
+  name: string;
+  fullName: string;
+  iso2: string;
+  iso3: string;
+  region: string;
+  tier: GeoTier;
+  exportValue: string;
+  exportValueNum: number;
+  continentalShare: string;
+  gdp: string;
+  gdpPerCapita: string;
+  population: string;
+  capital: string;
+  largestCity: string;
+  lat: number;
+  lng: number;
+  top5Exports: GeoTopExport[];
+  profileMetrics: GeoProfileMetric[];
+  economicAssets: string[];
+  narrative: string;
+  connectedComNodes: string[];
+  connectedGeoNodes: string[];
+  tags: string[];
+}
