@@ -38,7 +38,7 @@ export const ironOre: Commodity = {
     africanExportValue: 'Not yet meaningfully quantified (Simandou scaling)',
     africanShareGlobalExports: '~2–3% currently',
     africanReserves: '~13.8% of global resources (3rd-largest region)',
-    africanReserveValue: 'High (multi-decade runway)',
+    africanReserveValue: '~$1.7T',
     exportRegions: ['West Africa (Guinea, Sierra Leone, Liberia, Mauritania)', 'Southern Africa (South Africa)'],
     primaryMarkets: ['China', 'Japan', 'South Korea', 'India', 'Europe'],
   },

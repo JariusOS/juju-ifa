@@ -38,7 +38,7 @@ export const bauxite: Commodity = {
     africanExportValue: 'Substantial and China-concentrated',
     africanShareGlobalExports: 'Very high (Guinea world top exporter)',
     africanReserves: '~7.4B tonnes (Guinea, ~30% of global)',
-    africanReserveValue: 'Multi-decade reserve life',
+    africanReserveValue: '~$220B',
     exportRegions: ['West Africa (Guinea, overwhelmingly dominant)'],
     primaryMarkets: ['China', 'India', 'Middle East'],
   },

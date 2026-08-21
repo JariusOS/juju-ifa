@@ -135,12 +135,12 @@ export default function CommodityProfile({ c }: { c: Commodity }) {
           <ConfidenceRing value={c.confidence} size={32} />
         </div>
         <div style={{ display: 'flex', gap: 4, marginTop: 6, overflowX: 'auto', scrollbarWidth: 'none' }}>
-          {['overview', ...sections.map((s) => s.key), 'briefing'].map((key) => (
+          {['overview', 'metadata', 'dna', ...sections.filter((s) => !['fingerprint', 'dna-kv'].includes(s.key)).map((s) => s.key), 'briefing'].map((key) => (
             <a key={key} href={`#sec-${key}`} style={{
               fontSize: 9.5, fontWeight: 600, color: THEME.muted, padding: '3px 8px', borderRadius: 4,
               background: key === 'overview' ? THEME.accentSoft : 'transparent', border: `1px solid ${THEME.border}`,
               textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.03em', whiteSpace: 'nowrap',
-            }}>{key === 'overview' ? 'Overview' : key}</a>
+            }}>{key === 'overview' ? 'Overview' : key === 'metadata' ? 'Metadata' : key === 'dna' ? 'DNA' : key}</a>
           ))}
         </div>
       </div>
@@ -221,8 +221,94 @@ export default function CommodityProfile({ c }: { c: Commodity }) {
         </div>
       </div>
 
-      {/* Sections */}
-      {sections.map((s) => <SectionCard key={s.key} section={s} accentColor={tColor} />)}
+      {/* Node Metadata (ported from MasterView — status, weight, tags) */}
+      <div id="sec-metadata" style={{ background: THEME.card, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: 16, marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+          <span style={{ width: 2, height: 12, borderRadius: 1, background: tColor }} />
+          <span style={{ fontSize: 10, fontWeight: 700, color: THEME.t1, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Node Metadata</span>
+        </div>
+        {([
+          ['Status', c.status],
+          ['Node ID', `[[${c.id}]]`],
+          ['Node Type', c.nodeType || c.nodeClass],
+          ['HS Code', c.hsCode],
+          ['Rank', c.rankLabel],
+          ['Weight', `${c.weight}/10 \u2014 ${c.weightLabel}`],
+          ['Confidence', `${c.confidence}% \u2014 ${c.confidenceLabel}`],
+        ] as [string, string][]).filter(([, v]) => v && v !== '\u2014').map(([label, value]) => (
+          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 0', borderBottom: `1px solid ${THEME.border}` }}>
+            <span style={{ fontSize: 11, color: THEME.dim }}>{label}</span>
+            <span className="mono" style={{ fontSize: 11, color: THEME.t1, fontWeight: 600, textAlign: 'right' }}>{value}</span>
+          </div>
+        ))}
+        {c.nodeTags.length > 0 && (
+          <div style={{ marginTop: 8 }}>
+            <div style={{ fontSize: 9, color: THEME.dim, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>Node Tags</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+              {c.nodeTags.map((t) => <span key={t} style={{ fontSize: 9, color: tColor, padding: '2px 6px', borderRadius: 4, border: `1px solid ${THEME.border}`, background: THEME.surface }}>{t}</span>)}
+            </div>
+          </div>
+        )}
+        {c.tags.length > 0 && (
+          <div style={{ marginTop: 8 }}>
+            <div style={{ fontSize: 9, color: THEME.dim, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>Commodity Tags</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+              {c.tags.map((t) => <span key={t} style={{ fontSize: 9, color: tColor, padding: '2px 6px', borderRadius: 4, border: `1px solid ${THEME.border}` }}>{t}</span>)}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Commodity DNA — enhanced (ported from DnaView — quality examples as cards) */}
+      {(c.dna.description || c.dna.qualityExamples.length > 0 || c.dna.africanGrades.length > 0 || c.price.benchmarks.length > 0) && (
+        <div id="sec-dna" style={{ background: THEME.card, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: 16, marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+            <span style={{ width: 2, height: 12, borderRadius: 1, background: tColor }} />
+            <span style={{ fontSize: 10, fontWeight: 700, color: THEME.t1, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Commodity DNA</span>
+          </div>
+          {c.dna.description && <p style={{ fontSize: 12, color: THEME.t2, lineHeight: 1.6, marginBottom: 12 }}>{c.dna.description}</p>}
+          {c.dna.qualityExamples.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 9, color: THEME.dim, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>Quality Examples</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 6 }}>
+                {c.dna.qualityExamples.map((q) => (
+                  <div key={q.name} style={{ background: THEME.surface, border: `1px solid ${THEME.border}`, borderRadius: 6, padding: '8px 10px' }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: THEME.t1 }}>{q.name}</div>
+                    <div className="mono" style={{ fontSize: 9, color: THEME.dim, marginTop: 2 }}>API {q.api} &middot; S {q.sulfur} &middot; {q.qualityClass}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {c.dna.africanGrades.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 9, color: THEME.dim, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>African Grades</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>{c.dna.africanGrades.map((g) => <span key={g} style={{ fontSize: 9, color: THEME.t1, padding: '3px 7px', borderRadius: 5, border: `1px solid ${THEME.border}`, background: THEME.surface }}>{g}</span>)}</div>
+            </div>
+          )}
+          {c.price.benchmarks.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 9, color: THEME.dim, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>Price Benchmarks</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>{c.price.benchmarks.map((b) => <span key={b} style={{ fontSize: 9, color: tColor, padding: '3px 7px', borderRadius: 5, border: `1px solid ${tColor}40`, background: `${tColor}10` }}>{b}</span>)}</div>
+            </div>
+          )}
+          {c.dna.outputs.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 9, color: THEME.dim, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>Outputs</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>{c.dna.outputs.map((o) => <span key={o} style={{ fontSize: 9, color: THEME.t1, padding: '3px 7px', borderRadius: 5, border: `1px solid ${THEME.border}`, background: THEME.surface }}>{o}</span>)}</div>
+            </div>
+          )}
+          {c.dna.applications.length > 0 && (
+            <div>
+              <div style={{ fontSize: 9, color: THEME.dim, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>Applications</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>{c.dna.applications.map((a) => <span key={a} style={{ fontSize: 9, color: THEME.t1, padding: '3px 7px', borderRadius: 5, border: `1px solid ${THEME.border}`, background: THEME.surface }}>{a}</span>)}</div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Sections — skip fingerprint (in hero) and dna-kv (enhanced inline above) */}
+      {sections.filter((s) => !['fingerprint', 'dna-kv'].includes(s.key)).map((s) => <SectionCard key={s.key} section={s} accentColor={tColor} />)}
 
       {/* Briefing */}
       <IntelligenceBriefing c={c} />

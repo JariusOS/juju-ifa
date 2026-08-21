@@ -38,7 +38,7 @@ export const naturalGasLng: Commodity = {
     africanExportValue: '~$35–38B (modeled; Nigeria alone ~$14–15B)',
     africanShareGlobalExports: '~9%',
     africanReserves: '>620 Tcf (Nigeria alone >200 Tcf)',
-    africanReserveValue: 'Strategic reserve asset (multi-decade horizon)',
+    africanReserveValue: '~$1.9T',
     exportRegions: ['West Africa', 'North Africa', 'Southern/East Africa', 'Central Africa'],
     primaryMarkets: ['Europe', 'China', 'Japan', 'South Korea', 'India'],
   },

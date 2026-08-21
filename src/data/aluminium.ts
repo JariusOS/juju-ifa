@@ -38,7 +38,7 @@ export const aluminium: Commodity = {
     africanExportValue: 'Modest in aggregate; Mozal = ~30% of Mozambique\'s official national exports',
     africanShareGlobalExports: '~2%',
     africanReserves: 'N/A (aluminium is smelted, not mined — see bauxite for reserve data)',
-    africanReserveValue: 'N/A',
+    africanReserveValue: '$0 (smelted; see Bauxite)',
     exportRegions: ['Southern Africa (South Africa — Hillside)', 'Southeast Africa (Mozambique — Mozal)', 'North Africa (Egypt — Egyptalum)', 'West Africa (Ghana — VALCO)'],
     primaryMarkets: ['International markets (export-oriented smelters)'],
   },

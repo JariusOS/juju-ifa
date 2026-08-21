@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { GEONODES, GEONODE_BY_SLUG } from '@/data/geonodes';
+import { getCommodityByName } from '@/data/commodities';
 import { THEME } from '@/app/nodes/[id]/_components/theme';
 import type { GeoNode } from '@/data/types';
 
@@ -270,12 +271,16 @@ export default function GeoNodeProfile() {
               <span style={{ fontSize: 10, fontWeight: 700, color: THEME.t1, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Connected Commodities</span>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-              {geo.connectedComNodes.map((com) => (
-                <Link key={com} href={`/nodes/${encodeURIComponent(com)}`} style={{
-                  fontSize: 11, fontWeight: 600, color: THEME.com, padding: '4px 10px', borderRadius: 6,
-                  background: THEME.comSoft, border: `1px solid ${THEME.comBorder}`, textDecoration: 'none',
-                }}>{com}</Link>
-              ))}
+              {geo.connectedComNodes.map((com) => {
+                const resolved = getCommodityByName(com);
+                const href = resolved ? `/nodes/${resolved.id}` : `/nodes/${encodeURIComponent(com)}`;
+                return (
+                  <Link key={com} href={href} style={{
+                    fontSize: 11, fontWeight: 600, color: THEME.com, padding: '4px 10px', borderRadius: 6,
+                    background: THEME.comSoft, border: `1px solid ${THEME.comBorder}`, textDecoration: 'none',
+                  }}>{com}</Link>
+                );
+              })}
             </div>
           </div>
         )}

@@ -82,3 +82,8 @@ export function getCommodityById(id: string): Commodity | undefined {
 export function getCommodityByRank(rank: number): Commodity | undefined {
   return commodities.find((c) => c.id.endsWith(`-${String(rank).padStart(3, '0')}`));
 }
+
+export function getCommodityByName(name: string): Commodity | undefined {
+  const n = name.trim().toLowerCase();
+  return commodities.find((c) => c.name.toLowerCase() === n);
+}

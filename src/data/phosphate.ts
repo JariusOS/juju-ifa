@@ -38,7 +38,7 @@ export const phosphate: Commodity = {
     africanExportValue: 'Substantial (Morocco world leader via OCP)',
     africanShareGlobalExports: 'Very high relative to production share',
     africanReserves: '~50B tonnes (Morocco, ~68–70% of global)',
-    africanReserveValue: 'Multi-generational reserve life',
+    africanReserveValue: '~$5T',
     exportRegions: ['Morocco (overwhelmingly dominant)', 'Egypt', 'Tunisia'],
     primaryMarkets: ['India', 'Europe', 'North America', 'Sub-Saharan Africa', 'East Asia/Oceania'],
   },

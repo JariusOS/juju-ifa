@@ -38,7 +38,7 @@ export const cocoa: Commodity = {
     africanExportValue: '~$12–13B (modeled, bean-level)',
     africanShareGlobalExports: '~65%',
     africanReserves: 'N/A (annual crop)',
-    africanReserveValue: 'N/A',
+    africanReserveValue: '$0 (agricultural)',
     exportRegions: ['West Africa (Côte d\'Ivoire, Ghana, Nigeria, Cameroon)'],
     primaryMarkets: ['Netherlands', 'Germany', 'USA', 'Belgium', 'Malaysia'],
   },

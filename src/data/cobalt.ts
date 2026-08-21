@@ -38,7 +38,7 @@ export const cobalt: Commodity = {
     africanExportValue: 'Substantial, largely raw ore/hydroxide',
     africanShareGlobalExports: 'Very high in raw-material terms',
     africanReserves: '~6M tonnes (DRC, ~55% of global)',
-    africanReserveValue: 'Multi-decade reserve life',
+    africanReserveValue: '~$130B',
     exportRegions: ['Central Africa (DRC, overwhelmingly)'],
     primaryMarkets: ['China', 'USA (emerging)'],
   },

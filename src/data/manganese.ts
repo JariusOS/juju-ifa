@@ -57,7 +57,7 @@ export const manganese: Commodity = {
       "Very high — South Africa, Gabon, Ghana and Côte d'Ivoire collectively hold 43% of global manganese reserves",
     africanReserves:
       'South Africa ~560Mt (~38% of world total); Gabon ~61Mt (~4%); Kalahari Basin believed to hold >70% of global reserves',
-    africanReserveValue: 'Exceptionally long multi-decade production runway',
+    africanReserveValue: '~$1.1T',
     exportRegions: [
       'Southern Africa (South Africa, dominant)',
       'Central Africa (Gabon, second)',

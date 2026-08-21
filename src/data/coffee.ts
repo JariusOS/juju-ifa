@@ -38,7 +38,7 @@ export const coffee: Commodity = {
     africanExportValue: 'Ethiopia $2.65B (record); Uganda $2.0–2.25B; combined >$4.5B annually',
     africanShareGlobalExports: "Rising; Africa's share of global production fell from ~25% (1960s) to ~11% today, now actively targeted for recovery to 20% by 2030",
     africanReserves: 'N/A (perennial tree crop)',
-    africanReserveValue: 'N/A',
+    africanReserveValue: '$0 (agricultural)',
     exportRegions: ['East Africa (Ethiopia, Uganda — ~80% of continental exports)', "West Africa (Côte d'Ivoire, secondary robusta)"],
     primaryMarkets: ['European Union', 'USA', 'Growing Middle Eastern and Asian specialty markets'],
   },

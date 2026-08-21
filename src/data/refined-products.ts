@@ -38,7 +38,7 @@ export const refinedProducts: Commodity = {
     africanExportValue: 'Emerging via Dangote',
     africanShareGlobalExports: 'Newly emerging',
     africanReserves: 'N/A (downstream node)',
-    africanReserveValue: 'N/A',
+    africanReserveValue: '$0 (refined product)',
     exportRegions: ['Nigeria (Dangote)', 'Angola (planned)', 'Uganda (planned)'],
     primaryMarkets: ['Côte d\'Ivoire', 'Cameroon', 'Ghana', 'Togo', 'Tanzania', 'South Africa'],
   },

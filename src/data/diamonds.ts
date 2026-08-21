@@ -38,7 +38,7 @@ export const diamonds: Commodity = {
     africanExportValue: '~$6–7B (modeled)',
     africanShareGlobalExports: '~60–65%',
     africanReserves: 'Concentrated (Botswana, South Africa, Namibia, Angola, DRC)',
-    africanReserveValue: 'Not consistently reported',
+    africanReserveValue: '~$180B',
     exportRegions: ['Southern Africa', 'Central Africa', 'West Africa'],
     primaryMarkets: ['UAE (Dubai)', 'Belgium (Antwerp)', 'India', 'Hong Kong', 'Israel'],
   },

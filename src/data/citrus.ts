@@ -38,7 +38,7 @@ export const citrus: Commodity = {
     africanExportValue: 'South Africa: 54% of national fruit exports, 17% of agricultural exports; Egypt: citrus = largest share of $11.5B total agricultural exports',
     africanShareGlobalExports: 'South Africa world #1 by volume; Egypt world #1 oranges',
     africanReserves: 'N/A (perennial tree crop)',
-    africanReserveValue: 'N/A',
+    africanReserveValue: '$0 (agricultural)',
     exportRegions: ['Southern Africa (South Africa)', 'North Africa (Egypt)', 'Secondary: Eswatini, Botswana, Morocco'],
     primaryMarkets: ['Europe (36% of SA orange exports)', 'Middle East (21%)', 'Far East/Asia (11%)', 'Russia (10%)', 'North America (9%)'],
   },

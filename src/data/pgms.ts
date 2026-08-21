@@ -38,7 +38,7 @@ export const pgms: Commodity = {
     africanExportValue: '~$15–18B (modeled)',
     africanShareGlobalExports: '~65–70%',
     africanReserves: '~63 million kg (South Africa alone, ~83% of global)',
-    africanReserveValue: 'Very high (multi-decade Bushveld mine life)',
+    africanReserveValue: '~$2.5T',
     exportRegions: ['Southern Africa (South Africa dominant; Zimbabwe secondary)'],
     primaryMarkets: ['Europe', 'China', 'USA'],
   },

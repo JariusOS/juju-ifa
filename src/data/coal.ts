@@ -38,7 +38,7 @@ export const coal: Commodity = {
     africanExportValue: '~$6B (South Africa, 2025 — $5.98B, down 16% YoY)',
     africanShareGlobalExports: '~4–5% (modeled)',
     africanReserves: '~35 billion tons (South Africa, ~173 years)',
-    africanReserveValue: 'Multi-generational domestic runway',
+    africanReserveValue: '~$2.4T',
     exportRegions: ['Southern Africa (South Africa dominant)', 'Mozambique (secondary)'],
     primaryMarkets: ['Europe', 'India', 'China', 'Other Asia'],
   },

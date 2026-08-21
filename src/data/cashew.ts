@@ -38,7 +38,7 @@ export const cashew: Commodity = {
     africanExportValue: 'Côte d\'Ivoire ~$623–625M kernel exports (2025); broader Africa Cashew Market valued at $3.3B (2025), projected $5.02B by 2031',
     africanShareGlobalExports: 'Côte d\'Ivoire overtook India in 2025 to become world\'s #2 kernel exporter',
     africanReserves: 'N/A (perennial tree crop)',
-    africanReserveValue: 'N/A',
+    africanReserveValue: '$0 (agricultural)',
     exportRegions: ['West Africa (Côte d\'Ivoire dominant, plus Benin, Nigeria, Burkina Faso, Guinea-Bissau)', 'East Africa (Tanzania)'],
     primaryMarkets: ['Vietnam (historically dominant raw-nut buyer)', 'India (major processor)', 'European Union (growing kernel destination)', 'USA (growing, newly complicated by tariffs)'],
   },

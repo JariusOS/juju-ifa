@@ -38,7 +38,7 @@ export const gold: Commodity = {
     africanExportValue: '>$45B (2025, projected)',
     africanShareGlobalExports: '~18–20% (modeled)',
     africanReserves: 'Substantial (SA, Ghana, Mali, Burkina Faso, Tanzania, DRC)',
-    africanReserveValue: 'Strategic asset base',
+    africanReserveValue: '~$3.5T',
     exportRegions: ['West Africa (Ghana, Mali, Burkina Faso)', 'Southern Africa (South Africa)', 'East Africa (Tanzania, Sudan)'],
     primaryMarkets: ['Switzerland', 'UAE (Dubai)', 'India', 'China', 'UK (LBMA)'],
   },
