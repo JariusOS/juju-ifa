@@ -20,8 +20,8 @@ const features = [
   {
     title: 'Commodity Index',
     icon: '▦',
-    desc: '18 African commodities ranked by export value, with real-time pricing, YoY trends, and confidence scores. Drill into supply chains, producers, and trade flows.',
-    stat: '18 Commodities',
+    desc: '100 African commodities ranked by export value, with real-time pricing, YoY trends, and confidence scores. Drill into supply chains, producers, and trade flows.',
+    stat: '100 Commodities',
     link: '/explorer',
     gradient: 'var(--accent)',
   },
@@ -116,7 +116,7 @@ export default function LandingPage() {
             maxWidth: 640,
             margin: '0 auto 40px',
           }}>
-            Real-time data across 18 commodity sectors and 54 economies. Built for analysts,
+            Real-time data across 100 commodity sectors and 54 economies. Built for analysts,
             investors, and policymakers who need the full picture.
           </p>
 
@@ -133,7 +133,7 @@ export default function LandingPage() {
             overflow: 'hidden',
           }}>
             {[
-              { value: '18', label: 'Commodities' },
+              { value: '100', label: 'Commodities' },
               { value: '54', label: 'Economies' },
               { value: '$565B+', label: 'Export Value' },
               { value: '5', label: 'Regions' },
@@ -502,7 +502,7 @@ export default function LandingPage() {
               <span style={{ fontSize: 12, color: 'var(--text-4)', marginLeft: 6 }}>Economies</span>
             </div>
             <div>
-              <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--accent)', fontFamily: 'var(--font-mono, monospace)' }}>18</span>
+              <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--accent)', fontFamily: 'var(--font-mono, monospace)' }}>100</span>
               <span style={{ fontSize: 12, color: 'var(--text-4)', marginLeft: 6 }}>Commodities</span>
             </div>
             <div>
@@ -545,7 +545,7 @@ export default function LandingPage() {
             lineHeight: 1.6,
             marginBottom: 36,
           }}>
-            18 commodity modules · 54 country profiles · Dark, Light &amp; Cream themes
+            100 commodity modules · 54 country profiles · Dark, Light &amp; Cream themes
           </p>
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
