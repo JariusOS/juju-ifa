@@ -53,7 +53,7 @@ function Shell({ children }: { children: React.ReactNode }) {
           </svg>
           <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
             <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-1)', letterSpacing: '-0.02em' }}>
-              JUJU <span style={{ color: 'var(--accent)' }}>IFA</span>
+              ifa old <span style={{ color: 'var(--accent)' }}>IFA</span>
             </span>
             <span style={{ fontSize: 8, fontWeight: 600, color: 'var(--text-4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               Explorer
@@ -104,7 +104,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" data-theme="dark">
       <head>
-        <title>JUJU IFA Explorer — African Commodity Intelligence</title>
+        <title>ifa old — African Commodity Intelligence</title>
         <meta name="description" content="Comprehensive intelligence explorer across Africa's 18 commodity sectors and 54 economies" />
       </head>
       <body>

@@ -637,7 +637,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div style={{ marginTop: 16, fontSize: 10, color: 'var(--text-4)', textAlign: 'center' }}>
-            JUJU IFA Explorer — A sovereign knowledge graph of African commerce. Building the definitive intelligence platform for African commodities and geographies.
+            ifa old — A sovereign knowledge graph of African commerce. Building the definitive intelligence platform for African commodities and geographies.
           </div>
         </div>
       </footer>
