@@ -51,6 +51,7 @@ function attach(c: Commodity, rec: (typeof MASTER_100)[number]): Commodity {
   const extras = MODULE_EXTRAS[rec.name];
   return {
     ...c,
+    avatarUrl: c.avatarUrl || `/commodities/${c.slug}.png`,
     sections: [...buildSections(c), ...(extras ? extrasToSections(extras) : [])],
     briefing: extras?.briefing,
   };

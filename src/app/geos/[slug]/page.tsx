@@ -151,8 +151,6 @@ export default function GeoNodeProfile() {
   }
 
   const tier = TIER_COLORS[geo.tier] || TIER_COLORS.Emerging;
-  const topExportShare = parseShare(geo.top5Exports[0]?.share || '0');
-
   return (
     <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 16px', background: THEME.bg, minHeight: '100vh' }}>
       <div style={{ paddingBottom: 40 }}>
@@ -246,6 +244,60 @@ export default function GeoNodeProfile() {
             ))}
           </div>
         </div>
+
+        {/* ── Geopolitical Profile ── */}
+        {geo.officialName && (
+          <div style={{ background: THEME.card, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: 16, marginBottom: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+              <span style={{ width: 2, height: 12, borderRadius: 1, background: 'var(--warning)' }} />
+              <span style={{ fontSize: 10, fontWeight: 700, color: THEME.t1, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Geopolitical Profile</span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 4 }}>
+              {geo.officialName && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: `1px solid ${THEME.border}` }}>
+                  <span style={{ fontSize: 11, color: THEME.dim }}>Official Name</span>
+                  <span className="mono" style={{ fontSize: 11, color: THEME.t1, fontWeight: 600 }}>{geo.officialName}</span>
+                </div>
+              )}
+              {geo.subdivisions && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: `1px solid ${THEME.border}` }}>
+                  <span style={{ fontSize: 11, color: THEME.dim }}>Subdivisions</span>
+                  <span className="mono" style={{ fontSize: 11, color: THEME.t1, fontWeight: 600, textAlign: 'right' }}>{geo.subdivisions}</span>
+                </div>
+              )}
+              {geo.capitalPop && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: `1px solid ${THEME.border}` }}>
+                  <span style={{ fontSize: 11, color: THEME.dim }}>Capital Population</span>
+                  <span className="mono" style={{ fontSize: 11, color: THEME.t1, fontWeight: 600, textAlign: 'right' }}>{geo.capitalPop}</span>
+                </div>
+              )}
+              {geo.largestCityPop && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: `1px solid ${THEME.border}` }}>
+                  <span style={{ fontSize: 11, color: THEME.dim }}>Largest City Population</span>
+                  <span className="mono" style={{ fontSize: 11, color: THEME.t1, fontWeight: 600, textAlign: 'right' }}>{geo.largestCityPop}</span>
+                </div>
+              )}
+              {geo.sexRatio && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: `1px solid ${THEME.border}` }}>
+                  <span style={{ fontSize: 11, color: THEME.dim }}>Sex Ratio (M/F)</span>
+                  <span className="mono" style={{ fontSize: 11, color: THEME.t1, fontWeight: 600, textAlign: 'right' }}>{geo.sexRatio}</span>
+                </div>
+              )}
+              {geo.isRegion && geo.memberCountries && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: `1px solid ${THEME.border}` }}>
+                  <span style={{ fontSize: 11, color: THEME.dim }}>Member Countries</span>
+                  <span className="mono" style={{ fontSize: 11, color: THEME.t1, fontWeight: 600, textAlign: 'right' }}>{geo.memberCountries.length}</span>
+                </div>
+              )}
+              {geo.structuralParam && (
+                <div style={{ gridColumn: '1 / -1', padding: '6px 0', borderBottom: `1px solid ${THEME.border}` }}>
+                  <span style={{ fontSize: 9, color: THEME.dim, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: 2 }}>Aligned Structural Parameter</span>
+                  <span style={{ fontSize: 10, color: THEME.muted, lineHeight: 1.5, fontStyle: 'italic' }}>{geo.structuralParam}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* ── Economic Assets ── */}
         <div style={{ background: THEME.card, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: 16, marginBottom: 12 }}>

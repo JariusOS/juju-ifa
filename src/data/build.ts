@@ -124,6 +124,7 @@ export function buildFromIndex(rec: MasterRecord): Commodity {
     status: 'Verified (index reference)',
     nodeType: cat.type,
     nodeClass: cat.cls,
+    avatarUrl: `/commodities/${slug}.png`,
     weight: weight.weight,
     weightLabel: weight.label,
     confidence: conf,

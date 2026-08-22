@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { GEONODES } from '@/data/geonodes';
+import { GEOCOUNTRIES, GEOREGIONS, GEONODES } from '@/data/geonodes';
 import type { GeoNode, GeoTier } from '@/data/types';
 
 const TIERS: (GeoTier | 'All')[] = ['All', 'Elite', 'Standard', 'Emerging'];
@@ -66,7 +66,7 @@ export default function GeosIndex() {
 
   const list = useMemo(() => {
     const ql = q.trim().toLowerCase();
-    return GEONODES
+    return GEOCOUNTRIES
       .filter((g) => tier === 'All' || g.tier === tier)
       .filter((g) => region === 'All' || g.region === REGION_MAP[region])
       .filter((g) =>
@@ -94,7 +94,7 @@ export default function GeosIndex() {
       });
   }, [q, tier, region, sort, asc]);
 
-  const totalExport = useMemo(() => GEONODES.reduce((s, g) => s + g.exportValueNum, 0), []);
+  const totalExport = useMemo(() => GEOCOUNTRIES.reduce((s, g) => s + g.exportValueNum, 0), []);
 
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px 80px' }}>
@@ -106,7 +106,7 @@ export default function GeosIndex() {
               Geography Index
             </h1>
             <p style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 2 }}>
-              {GEONODES.length} African countries · ${(totalExport / 1).toFixed(0)}B+ total export value
+              {GEOCOUNTRIES.length} African countries · {GEOREGIONS.length} Regional SuperNodes · ${(totalExport / 1).toFixed(0)}B+ total export value
             </p>
           </div>
           <Link href="/" style={{ fontSize: 12, color: 'var(--text-3)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -378,6 +378,44 @@ export default function GeosIndex() {
       )}
 
       {list.length === 0 && <div style={{ textAlign: 'center', padding: 48, color: 'var(--text-4)', fontSize: 13 }}>No countries match your search.</div>}
+
+      {/* Regional SuperNodes */}
+      <div style={{ marginTop: 40 }}>
+        <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-1)', marginBottom: 16 }}>
+          Regional SuperNodes
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+          {GEOREGIONS.map((r) => (
+            <Link key={r.id} href={`/geos/${r.slug}`} style={{ textDecoration: 'none' }}>
+              <div style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: 10,
+                padding: 16,
+                transition: 'all 0.15s',
+                cursor: 'pointer',
+                borderTop: '2px solid var(--accent)',
+              }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+              >
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
+                  Regional SuperNode
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-1)', marginBottom: 6 }}>
+                  {r.name}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--text-3)', marginBottom: 8 }}>
+                  {r.memberCountries?.length} countries
+                </div>
+                <div className="mono" style={{ fontSize: 14, fontWeight: 700, color: 'var(--warning)' }}>
+                  {r.exportValue}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

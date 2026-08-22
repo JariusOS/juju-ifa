@@ -44,6 +44,7 @@ export interface Commodity {
   status: string;
   nodeType: string;
   nodeClass: string;
+  avatarUrl?: string;
   weight: number;
   weightLabel: string;
   confidence: number;
@@ -164,7 +165,10 @@ export interface GeoNode {
   gdpPerCapita: string;
   population: string;
   capital: string;
+  officialName?: string;
+  capitalPop?: string;
   largestCity: string;
+  largestCityPop?: string;
   lat: number;
   lng: number;
   top5Exports: GeoTopExport[];
@@ -174,4 +178,9 @@ export interface GeoNode {
   connectedComNodes: string[];
   connectedGeoNodes: string[];
   tags: string[];
+  isRegion?: boolean;
+  subdivisions?: string;
+  sexRatio?: string;
+  structuralParam?: string;
+  memberCountries?: string[];
 }

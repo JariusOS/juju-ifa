@@ -149,10 +149,31 @@ export default function CommodityProfile({ c }: { c: Commodity }) {
       <div style={{ background: THEME.card, border: `1px solid ${THEME.border}`, borderRadius: 10, padding: 16, margin: '10px 0' }} id="sec-overview">
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
           <div style={{
-            width: 48, height: 48, borderRadius: 10, border: `1.5px solid ${tColor}`,
+            width: 56, height: 56, borderRadius: 12, border: `2px solid ${tColor}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center', background: nodeClassSoft(tc), flexShrink: 0,
+            overflow: 'hidden',
           }}>
-            <span style={{ fontSize: 20, fontWeight: 700, color: tColor }}>{c.name.charAt(0)}</span>
+            {c.avatarUrl ? (
+              <img src={c.avatarUrl} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent) {
+                    parent.style.display = 'flex';
+                    parent.style.background = nodeClassSoft(tc);
+                    const span = document.createElement('span');
+                    span.style.fontSize = '20';
+                    span.style.fontWeight = '700';
+                    span.style.color = tColor;
+                    span.textContent = c.name.charAt(0);
+                    parent.appendChild(span);
+                  }
+                }}
+              />
+            ) : (
+              <span style={{ fontSize: 20, fontWeight: 700, color: tColor }}>{c.name.charAt(0)}</span>
+            )}
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
@@ -162,6 +183,11 @@ export default function CommodityProfile({ c }: { c: Commodity }) {
             </div>
             <div style={{ fontSize: 18, fontWeight: 700, color: THEME.t1, marginTop: 2 }}>{c.name}</div>
             <div style={{ fontSize: 10, color: THEME.muted, marginTop: 1 }}>{c.nodeClass}</div>
+            {c.avatarUrl && (
+              <div style={{ marginTop: 4, fontSize: 9, color: THEME.dim }}>
+                <span style={{ color: 'var(--info)', fontWeight: 600 }}>🎨 Character avatar</span>
+              </div>
+            )}
           </div>
           <ConfidenceRing value={c.confidence} size={50} />
         </div>
